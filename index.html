@@ -2,103 +2,184 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
-<title>Sistema de Contingência para Atendimento de Exames</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contingência - Prevent Senior</title>
 
 <link rel="stylesheet" href="css/style.css">
 
-<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://apis.google.com/js/api.js"></script>
+<script src="https://accounts.google.com/gsi/client"></script>
 
 </head>
 
+
 <body>
 
+<div class="container">
+
 <div class="header">
-<h1>Sistema de Contingência de Atendimento</h1>
-<p>Protótipo – v1.0</p>
+<i class="fas fa-clinic-medical"></i>
+<h1>Núcleo - Contingência</h1>
 </div>
 
 
-<div class="panel">
+<div class="main-content">
 
-<h2>📋 Carregar Dados</h2>
+<!-- CARREGAR DADOS -->
 
+<div class="section-card">
+
+<div class="section-title">
+<i class="fas fa-upload"></i> Carregar Dados
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
 <label>Planilha de agendados:</label>
-<input type="file" id="fileAgendados" accept=".xlsx, .xls, .csv">
+<input type="file" id="fileAgendados">
+<div class="file-info">Nenhum arquivo escolhido</div>
+</div>
 
+<div class="form-group">
 <label>Cadastro JSON:</label>
-<input type="file" id="fileCadastro" accept=".json">
-
-<button onclick="carregarPlanilha()">Carregar Agendados</button>
-<button onclick="carregarCadastro()" class="secondary">Carregar Cadastro</button>
-
-<div id="resumoSistema"></div>
-
-<div class="log" id="log"></div>
+<input type="file" id="fileCadastro">
+<div class="file-info">Nenhum arquivo escolhido</div>
+</div>
 
 </div>
 
 
-<div class="panel">
+<div class="button-group">
 
-<h2>⚙️ Processamento</h2>
+<button class="btn btn-primary" onclick="carregarPlanilha()">
+<i class="fas fa-file-excel"></i> Carregar Agendados
+</button>
 
-<button onclick="processarAgendados()">📄 Gerar fichas dos agendados</button>
-<button onclick="exportarPlanilha()">📊 Exportar planilha</button>
-<button onclick="baixarCadastro()">💾 Baixar cadastro.json</button>
-<button onclick="location.reload()">🔄 Reiniciar sistema</button>
+<button class="btn" onclick="carregarCadastro()">
+<i class="fas fa-database"></i> Carregar Cadastro
+</button>
 
-<div id="pendingContainer" class="pending-list"></div>
+</div>
 
 </div>
 
 
-<div class="panel">
 
-<h2>➕ Registro Manual</h2>
+<!-- PROCESSAMENTO -->
 
-<label>Matrícula:</label>
-<input type="text" id="manualMatricula" onblur="buscarDadosManual()">
+<div class="section-card">
 
-<label>Nome:</label>
+<div class="section-title">
+<i class="fas fa-gear"></i> Processamento
+</div>
+
+<div class="button-group">
+
+<button class="btn btn-primary" onclick="processarAgendados()">
+<i class="fas fa-file-pdf"></i> Gerar fichas
+</button>
+
+<button class="btn" onclick="exportarPlanilha()">
+<i class="fas fa-table"></i> Exportar planilha
+</button>
+
+<button class="btn" onclick="location.reload()">
+<i class="fas fa-rotate"></i> Reiniciar sistema
+</button>
+
+</div>
+
+
+<div id="pendingContainer" class="pending-list" style="display:none"></div>
+
+<div class="log-area" id="log"></div>
+
+</div>
+
+
+
+<!-- REGISTRO MANUAL -->
+
+<div class="section-card">
+
+<div class="section-title">
+<i class="fas fa-pen"></i> Registro Manual
+</div>
+
+<div class="form-grid">
+
+<div class="form-group">
+<label>Matrícula</label>
+<input type="text" id="manualMatricula">
+</div>
+
+<div class="form-group">
+<label>Nome</label>
 <input type="text" id="manualNome">
+</div>
 
-<label>Data de Nascimento:</label>
+<div class="form-group">
+<label>Data nascimento</label>
 <input type="date" id="manualNascimento">
+</div>
 
-<label>Data da Coleta:</label>
+<div class="form-group">
+<label>Data coleta</label>
 <input type="date" id="manualData">
+</div>
 
-<label>Hora:</label>
+<div class="form-group">
+<label>Hora</label>
 <input type="time" id="manualHora">
+</div>
 
-<label>Procedimento:</label>
+<div class="form-group">
+<label>Procedimento</label>
 <input type="text" id="manualProcedimento">
+</div>
 
-<label>Local / Sala:</label>
-<input type="text" id="manualLocal">
+</div>
 
-<label>Médico:</label>
-<input type="text" id="manualMedico">
 
-<button onclick="gerarFichaManual()">🖨️ Gerar ficha e etiqueta</button>
+<div class="button-group">
+
+<button class="btn btn-primary" onclick="gerarFichaManual()">
+<i class="fas fa-print"></i> Gerar ficha
+</button>
+
+</div>
+
+</div>
 
 </div>
 
 
 <div class="footer">
-
-Sistema de Contingência de Atendimento  
-<br>
-Protótipo – v1.0  
-<br><br>
+Sistema de Contingência de Atendimento • Protótipo v1.0<br>
 Desenvolvido por <b>Bruna Martiliano Lage</b>
+</div>
+
 
 </div>
 
+
 <script src="js/script.js"></script>
 
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
 </body>
+
 </html>
