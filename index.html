@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+<meta charset="UTF-8">
+<title>Sistema de Contingência para Atendimento de Exames</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+</head>
+
+<body>
+
+<div class="header">
+<h1>Sistema de Contingência de Atendimento</h1>
+<p>Protótipo – v1.0</p>
+</div>
+
+
+<div class="panel">
+
+<h2>📋 Carregar Dados</h2>
+
+<label>Planilha de agendados:</label>
+<input type="file" id="fileAgendados" accept=".xlsx, .xls, .csv">
+
+<label>Cadastro JSON:</label>
+<input type="file" id="fileCadastro" accept=".json">
+
+<button onclick="carregarPlanilha()">Carregar Agendados</button>
+<button onclick="carregarCadastro()" class="secondary">Carregar Cadastro</button>
+
+<div id="resumoSistema"></div>
+
+<div class="log" id="log"></div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>⚙️ Processamento</h2>
+
+<button onclick="processarAgendados()">📄 Gerar fichas dos agendados</button>
+<button onclick="exportarPlanilha()">📊 Exportar planilha</button>
+<button onclick="baixarCadastro()">💾 Baixar cadastro.json</button>
+<button onclick="location.reload()">🔄 Reiniciar sistema</button>
+
+<div id="pendingContainer" class="pending-list"></div>
+
+</div>
+
+
+<div class="panel">
+
+<h2>➕ Registro Manual</h2>
+
+<label>Matrícula:</label>
+<input type="text" id="manualMatricula" onblur="buscarDadosManual()">
+
+<label>Nome:</label>
+<input type="text" id="manualNome">
+
+<label>Data de Nascimento:</label>
+<input type="date" id="manualNascimento">
+
+<label>Data da Coleta:</label>
+<input type="date" id="manualData">
+
+<label>Hora:</label>
+<input type="time" id="manualHora">
+
+<label>Procedimento:</label>
+<input type="text" id="manualProcedimento">
+
+<label>Local / Sala:</label>
+<input type="text" id="manualLocal">
+
+<label>Médico:</label>
+<input type="text" id="manualMedico">
+
+<button onclick="gerarFichaManual()">🖨️ Gerar ficha e etiqueta</button>
+
+</div>
+
+
+<div class="footer">
+
+Sistema de Contingência de Atendimento  
+<br>
+Protótipo – v1.0  
+<br><br>
+Desenvolvido por <b>Bruna Martiliano Lage</b>
+
+</div>
+
+<script src="js/script.js"></script>
+
+</body>
+</html>
