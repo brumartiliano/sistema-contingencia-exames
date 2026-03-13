@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contingência- Prevent Senior</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bibliotecas do Google -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #002b49;
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .header i {
+            font-size: 28px;
+        }
+        .header h1 {
+            font-weight: 500;
+            font-size: 24px;
+        }
+
+        .main-content {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .section-card {
+            background: #ffffff;
+            border: 1px solid #e9ecf0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a2b3c;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title i {
+            color: #0078bf;
+            font-size: 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-group label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #4a5a6e;
+        }
+        .form-group input, .form-group select {
+            padding: 10px 12px;
+            border: 1px solid #d0d7de;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #0078bf;
+            box-shadow: 0 0 0 3px rgba(0,120,191,0.1);
+        }
+        .form-group .file-info {
+            font-size: 13px;
+            color: #6b7a8c;
+            margin-top: 4px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin: 20px 0 10px;
+        }
+        .btn {
+            background: white;
+            border: 1px solid #d0d7de;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 14px;
+            color: #1a2b3c;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+        .btn-primary {
+            background: #0078bf;
+            border-color: #0078bf;
+            color: white;
+        }
+        .btn-primary i {
+            color: white;
+        }
+        .btn:hover {
+            background: #f0f4f8;
+        }
+        .btn-primary:hover {
+            background: #005a8f;
+        }
+
+        .pending-list {
+            background: #fef9e7;
+            border-left: 4px solid #f1c40f;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+        .pending-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+            padding: 8px;
+            background: white;
+            border-radius: 8px;
+        }
+        .pending-item input[type="date"] {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        .log-area {
+            background: #f0f4f8;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #e9ecf0;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 700px) {
+            .header { padding: 15px; }
+            .main-content { padding: 20px; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <i class="fas fa-clinic-medical"></i>
+        <h1>Núcleo - Contingência</h1>
+    </div>
+
+    <div class="main-content">
+        <!-- SEÇÃO CARREGAR DADOS -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-upload"></i> Carregar Dados
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Planilha de agendados (Contingência Londres.xlsx):</label>
+                    <input type="file" id="fileAgendados" accept=".xlsx, .xls, .csv">
+                    <div class="file-info">Nenhum arquivo escolhido</div>
+                </div>
+                <div class="form-group">
+                    <label>Cadastro JSON (opcional, será baixado ao final):</label>
+                    <input type="file" id="fileCadastro" accept=".json">
+                    <div class="file-info">Nenhum arquivo escolhido</div>
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="carregarPlanilha()"><i class="fas fa-file-excel"></i> Carregar Agendados</button>
+                <button class="btn" onclick="carregarCadastro()"><i class="fas fa-database"></i> Carregar Cadastro</button>
+            </div>
+        </div>
+
+        <!-- SEÇÃO PROCESSAMENTO -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-gear"></i> Processamento
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="processarAgendados()"><i class="fas fa-file-pdf"></i> Gerar fichas dos agendados (hoje)</button>
+                <button class="btn" onclick="exportarPlanilha()"><i class="fas fa-table"></i> Exportar planilha de atendimentos</button>
+            </div>
+
+            <div id="pendingContainer" class="pending-list" style="display: none;">
+                <h4 style="margin-bottom: 12px; color: #8a6d2b;"><i class="fas fa-clock"></i> Pendentes (informe a data de nascimento)</h4>
+            </div>
+
+            <div class="log-area" id="log"></div>
+        </div>
+
+        <!-- SEÇÃO REGISTRO MANUAL -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fas fa-pen"></i> Registro Manual (Coleta)
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Matrícula:</label>
+                    <input type="text" id="manualMatricula" placeholder="Ex: 842269-9" onblur="buscarDadosManual()">
+                </div>
+                <div class="form-group">
+                    <label>Nome:</label>
+                    <input type="text" id="manualNome">
+                </div>
+                <div class="form-group">
+                    <label>Data de nascimento:</label>
+                    <input type="date" id="manualNascimento">
+                </div>
+                <div class="form-group">
+                    <label>Data da Coleta:</label>
+                    <input type="date" id="manualData" value="">
+                </div>
+                <div class="form-group">
+                    <label>Hora:</label>
+                    <input type="time" id="manualHora">
+                </div>
+                <div class="form-group">
+                    <label>Procedimento:</label>
+                    <input type="text" id="manualProcedimento" placeholder="Ex: Coleta de sangue">
+                </div>
+                <div class="form-group">
+                    <label>Local / Sala:</label>
+                    <input type="text" id="manualLocal" value="Núcleo Londres - Terreo">
+                </div>
+                <div class="form-group">
+                    <label>Médico (opcional):</label>
+                    <input type="text" id="manualMedico">
+                </div>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-primary" onclick="gerarFichaManual()"><i class="fas fa-print"></i> Gerar ficha e etiqueta</button>
+            </div>
+        </div>
+
+        <!-- SEÇÃO BACKUP GOOGLE DRIVE -->
+        <div class="section-card">
+            <div class="section-title">
+                <i class="fab fa-google-drive"></i> Backup no Google Drive
+            </div>
+            <div class="form-group">
+                <label>Status da conexão:</label>
+                <span id="drive-status">Desconectado</span>
+            </div>
+            <div class="button-group">
+                <button class="btn" onclick="conectarGoogleDrive()" id="btn-conectar" disabled>
+                    <i class="fab fa-google"></i> Conectar ao Google Drive
+                </button>
+                <button class="btn" onclick="criarPastaDrive()" id="btn-pasta" disabled>
+                    <i class="fas fa-folder-plus"></i> Criar pasta de backup
+                </button>
+            </div>
+            <div class="form-group">
+                <label>Pasta de destino:</label>
+                <input type="text" id="pasta-destino" readonly value="Nenhuma pasta configurada">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Template oculto da ficha -->
+<div id="ficha-template" style="display: none;">
+    <div class="ficha-card" id="ficha-card" style="font-family: 'Inter', sans-serif; background: white; max-width: 900px; margin: 0 auto; padding: 20px;">
+        <style>
+            .ficha-header { background: linear-gradient(135deg, #0078bf 0%, #005a8f 100%); padding: 20px; text-align: center; }
+            .ficha-header img { height: 50px; filter: brightness(0) invert(1); }
+            .ficha-content { padding: 25px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+            .ficha-section { background: #f8fafc; border-radius: 10px; padding: 18px; }
+            .ficha-highlight { background: #e6f3ff; border-left: 4px solid #0078bf; padding: 18px; border-radius: 10px; }
+            .ficha-info { background: #f0f4f8; padding: 15px; border-radius: 10px; text-align: center; }
+            .ficha-info strong { display: block; }
+            .ficha-h1 { font-size: 24px; font-weight: 700; text-align: center; color: #0078bf; }
+            .ficha-footer { background: #2c3e50; color: white; padding: 15px; font-size: 12px; display: flex; justify-content: space-between; }
+        </style>
+        <div class="ficha-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Prevent_Senior_logo.png/1200px-Prevent_Senior_logo.png" alt="Logo Prevent Senior">
+        </div>
+        <div class="ficha-content">
+            <div>
+                <div class="ficha-h1">Orientações para Exame</div>
+                <div style="text-align: center; font-weight: 600;" id="ficha-procedimento">RM – PARÓTIDAS</div>
+                <div class="ficha-info">
+                    <strong id="ficha-nome">Paciente: </strong>
+                    <strong id="ficha-matricula">Matrícula: </strong>
+                    <strong id="ficha-nascimento">Data de Nascimento: </strong>
+                    <strong id="ficha-data">Data de comparecimento: </strong>
+                    <strong id="ficha-unidade">Unidade: </strong>
+                    <span>Praça dos Omaguás, 34 - Pinheiros, São Paulo - SP, 05419-020</span>
+                </div>
+                <!-- Seção de exames já incluída -->
+                <div class="ficha-section" style="margin-top: 15px;">
+                    <h3 style="display: flex; gap: 8px;"><i class="fas fa-stethoscope" style="color:#0078bf;"></i> EXAMES E PROCEDIMENTOS</h3>
+                    <ul style="list-style: none; padding: 0;">
+                        <li><strong>Procedimento:</strong> <span id="ficha-exame-proc"></span></li>
+                        <li><strong>Local:</strong> <span id="ficha-exame-local"></span></li>
+                        <li><strong>Médico:</strong> <span id="ficha-exame-medico"></span></li>
+                        <li><strong>Especialidade:</strong> <span id="ficha-exame-espec"></span></li>
+                        <li><strong>Horário:</strong> <span id="ficha-exame-hora"></span></li>
+                    </ul>
+                </div>
+            </div>
+            <div>
+                <!-- Espaço reservado -->
+            </div>
+        </div>
+        <div class="ficha-footer">
+            <div>Contato: (11) 3003-6284 | 0800 591 1156</div>
+            <div>www.preventsenior.com.br</div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts principais (já existentes) -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<script>
+    // ========== FUNÇÃO DE NORMALIZAÇÃO ==========
+    function normalizarTexto(texto) {
+        if (typeof texto !== 'string') return texto;
+        const mapa = {
+            'Ã¡': 'á', 'Ã©': 'é', 'Ã­': 'í', 'Ã³': 'ó', 'Ãº': 'ú',
+            'Ã€': 'À', 'Ã': 'Á', 'Ã‚': 'Â', 'Ãƒ': 'Ã', 'Ã„': 'Ä', 'Ã…': 'Å',
+            'Ã‡': 'Ç', 'Ãˆ': 'È', 'Ã‰': 'É', 'ÃŠ': 'Ê', 'Ã‹': 'Ë',
+            'ÃŒ': 'Ì', 'Ã': 'Í', 'ÃŽ': 'Î', 'Ã': 'Ï', 'Ã': 'Ð',
+            'Ã‘': 'Ñ', 'Ã’': 'Ò', 'Ã“': 'Ó', 'Ã”': 'Ô', 'Ã•': 'Õ', 'Ã–': 'Ö',
+            'Ã—': '×', 'Ã˜': 'Ø', 'Ã™': 'Ù', 'Ãš': 'Ú', 'Ã›': 'Û', 'Ãœ': 'Ü',
+            'Ã': 'Ý', 'Ãž': 'Þ', 'ÃŸ': 'ß', 'Ã ': 'à', 'â': 'â', 'ã': 'ã',
+            'ä': 'ä', 'å': 'å', 'æ': 'æ', 'ç': 'ç', 'è': 'è', 'é': 'é',
+            'ê': 'ê', 'ë': 'ë', 'ì': 'ì', 'í': 'í', 'î': 'î', 'ï': 'ï',
+            'ð': 'ð', 'ñ': 'ñ', 'ò': 'ò', 'ó': 'ó', 'ô': 'ô', 'õ': 'õ',
+            'ö': 'ö', '÷': '÷', 'ø': 'ø', 'ù': 'ù', 'ú': 'ú', 'û': 'û',
+            'ü': 'ü', 'ý': 'ý', 'þ': 'þ', 'ÿ': 'ÿ',
+            'TÃ“RAX': 'TÓRAX', 'NÃšCLEO': 'NÚCLEO'
+        };
+        const entradas = Object.entries(mapa).sort((a, b) => b[0].length - a[0].length);
+        let resultado = texto;
+        for (const [errado, certo] of entradas) {
+            resultado = resultado.replace(new RegExp(errado, 'g'), certo);
+        }
+        try {
+            resultado = decodeURIComponent(escape(resultado));
+        } catch (e) {}
+        return resultado;
+    }
+
+    // ========== VARIÁVEIS GLOBAIS ==========
+    let todosAgendados = [];
+    let cadastro = {};
+    let pendentes = [];
+
+    function log(msg) {
+        const div = document.getElementById('log');
+        div.innerHTML += '<div>' + new Date().toLocaleTimeString() + ' - ' + msg + '</div>';
+        div.scrollTop = div.scrollHeight;
+    }
+
+    // ========== FUNÇÕES DE ARQUIVO ==========
+    function carregarPlanilha() {
+        const file = document.getElementById('fileAgendados').files[0];
+        if (!file) { alert('Selecione um arquivo'); return; }
+        document.querySelectorAll('.file-info')[0].innerText = file.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                const sheetName = workbook.SheetNames[0];
+                const sheet = workbook.Sheets[sheetName];
+                let rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' });
+                const header = rows[0];
+                const colIndex = {
+                    data: header.findIndex(h => String(h).toLowerCase().includes('data agendada')),
+                    hora: header.findIndex(h => String(h).toLowerCase().includes('hora agendada')),
+                    status: header.findIndex(h => String(h).toLowerCase().includes('status')),
+                    matricula: header.findIndex(h => String(h).toLowerCase().includes('matricula')),
+                    beneficiario: header.findIndex(h => String(h).toLowerCase().includes('beneficiario')),
+                    procedimento: header.findIndex(h => String(h).toLowerCase().includes('procedimento')),
+                    local: header.findIndex(h => String(h).toLowerCase().includes('unidade')),
+                    sala: header.findIndex(h => String(h).toLowerCase().includes('andar/sala')),
+                    medico: header.findIndex(h => String(h).toLowerCase().includes('nome médico')),
+                    especialidade: header.findIndex(h => String(h).toLowerCase().includes('especialidade'))
+                };
+                if (colIndex.matricula < 0 || colIndex.beneficiario < 0) {
+                    throw new Error('Colunas obrigatórias não encontradas');
+                }
+                todosAgendados = [];
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (!row || row.length === 0) continue;
+                    const status = colIndex.status >= 0 ? row[colIndex.status] : '';
+                    if (String(status).trim().toUpperCase() !== 'ATIVADO') continue;
+                    let dataRaw = colIndex.data >= 0 ? row[colIndex.data] : '';
+                    let horaRaw = colIndex.hora >= 0 ? row[colIndex.hora] : '';
+                    let dataStr = '';
+                    if (dataRaw) {
+                        if (typeof dataRaw === 'number') {
+                            const date = XLSX.SSF.parse_date_code(dataRaw);
+                            if (date) dataStr = `${date.y}-${String(date.m).padStart(2,'0')}-${String(date.d).padStart(2,'0')}`;
+                        } else {
+                            dataStr = String(dataRaw).split(' ')[0];
+                        }
+                    }
+                    let horaStr = '';
+                    if (horaRaw) {
+                        if (typeof horaRaw === 'number') {
+                            const totalSec = Math.round(horaRaw * 24 * 3600);
+                            const h = Math.floor(totalSec / 3600);
+                            const m = Math.floor((totalSec % 3600) / 60);
+                            horaStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+                        } else {
+                            horaStr = String(horaRaw).substring(0,5);
+                        }
+                    }
+                    const item = {
+                        data: dataStr,
+                        hora: horaStr,
+                        matricula: colIndex.matricula >= 0 ? normalizarTexto(String(row[colIndex.matricula]).trim()) : '',
+                        beneficiario: colIndex.beneficiario >= 0 ? normalizarTexto(String(row[colIndex.beneficiario]).trim()) : '',
+                        procedimento: colIndex.procedimento >= 0 ? normalizarTexto(String(row[colIndex.procedimento]).trim()) : '',
+                        local: colIndex.local >= 0 ? normalizarTexto(String(row[colIndex.local]).trim()) : '',
+                        sala: colIndex.sala >= 0 ? normalizarTexto(String(row[colIndex.sala]).trim()) : '',
+                        medico: colIndex.medico >= 0 ? normalizarTexto(String(row[colIndex.medico]).trim()) : '',
+                        especialidade: colIndex.especialidade >= 0 ? normalizarTexto(String(row[colIndex.especialidade]).trim()) : '',
+                    };
+                    todosAgendados.push(item);
+                }
+                log(`${todosAgendados.length} agendamentos ATIVADOS carregados e normalizados.`);
+            } catch (err) {
+                alert('Erro ao ler planilha: ' + err.message);
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    function carregarCadastro() {
+        const file = document.getElementById('fileCadastro').files[0];
+        if (!file) { alert('Selecione um arquivo JSON'); return; }
+        document.querySelectorAll('.file-info')[1].innerText = file.name;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                cadastro = JSON.parse(e.target.result);
+                for (let mat in cadastro) {
+                    if (cadastro[mat].nome) cadastro[mat].nome = normalizarTexto(cadastro[mat].nome);
+                }
+                log(`Cadastro carregado com ${Object.keys(cadastro).length} registros.`);
+            } catch (err) {
+                alert('Arquivo JSON inválido');
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // ========== PROCESSAR AGENDADOS ==========
+    function processarAgendados() {
+        if (!todosAgendados.length) { alert('Carregue a planilha primeiro.'); return; }
+        const hoje = new Date();
+        const hojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+        const agendadosHoje = todosAgendados.filter(item => item.data === hojeStr);
+        if (agendadosHoje.length === 0) {
+            log('Nenhum agendamento para hoje encontrado.');
+            return;
+        }
+        log(`Processando ${agendadosHoje.length} agendamentos de hoje...`);
+        pendentes = [];
+        const prontos = [];
+        for (let item of agendadosHoje) {
+            if (cadastro[item.matricula] && cadastro[item.matricula].nascimento) {
+                prontos.push(item);
+            } else {
+                pendentes.push(item);
+            }
+        }
+        prontos.forEach(item => {
+            const nasc = cadastro[item.matricula].nascimento;
+            gerarFichaHTML(item, nasc);
+            gerarEtiqueta(item);
+        });
+        log(`${prontos.length} fichas geradas automaticamente.`);
+        mostrarPendentes();
+    }
+
+    function mostrarPendentes() {
+        const container = document.getElementById('pendingContainer');
+        container.style.display = pendentes.length ? 'block' : 'none';
+        container.innerHTML = '<h4 style="margin-bottom: 12px; color: #8a6d2b;"><i class="fas fa-clock"></i> Pendentes (informe a data de nascimento)</h4>';
+        pendentes.forEach((item, idx) => {
+            const div = document.createElement('div');
+            div.className = 'pending-item';
+            div.innerHTML = `
+                <span style="flex:2">${item.beneficiario} (${item.matricula})</span>
+                <input type="date" id="pendent_${idx}" value="" style="flex:1">
+                <button class="btn btn-primary" onclick="resolverPendente(${idx})" style="padding: 6px 12px;">✓ OK</button>
+            `;
+            container.appendChild(div);
+        });
+    }
+
+    function resolverPendente(idx) {
+        const input = document.getElementById(`pendent_${idx}`);
+        if (!input.value) { alert('Informe a data de nascimento'); return; }
+        const item = pendentes[idx];
+        if (!cadastro[item.matricula]) cadastro[item.matricula] = {};
+        cadastro[item.matricula].nome = item.beneficiario;
+        cadastro[item.matricula].nascimento = input.value;
+        gerarFichaHTML(item, input.value);
+        gerarEtiqueta(item);
+        pendentes.splice(idx, 1);
+        mostrarPendentes();
+        log(`Ficha gerada para ${item.beneficiario} e cadastro atualizado.`);
+    }
+
+    // ========== GERAÇÃO DE PDF (FICHA) ==========
+    async function gerarFichaHTML(item, nascimento) {
+        try {
+            const template = document.getElementById('ficha-template');
+            const clone = template.cloneNode(true);
+            clone.style.display = 'block';
+            clone.style.position = 'absolute';
+            clone.style.left = '-9999px';
+            clone.style.top = '0';
+            document.body.appendChild(clone);
+
+            const fichaCard = clone.querySelector('#ficha-card');
+            if (!fichaCard) throw new Error('Elemento #ficha-card não encontrado no clone');
+
+            const setText = (id, texto) => {
+                const el = fichaCard.querySelector('#' + id);
+                if (el) el.innerText = texto;
+                else console.warn('Elemento não encontrado:', id);
+            };
+
+            setText('ficha-nome', `Paciente: ${normalizarTexto(item.beneficiario || '')}`);
+            setText('ficha-matricula', `Matrícula: ${normalizarTexto(item.matricula || '')}`);
+
+            let nascFormat = nascimento;
+            if (nascimento && nascimento.includes('-')) {
+                const [ano, mes, dia] = nascimento.split('-');
+                nascFormat = `${dia}/${mes}/${ano}`;
+            }
+            setText('ficha-nascimento', `Data de Nascimento: ${nascFormat || ''}`);
+
+            let dataComparecimento = item.data;
+            if (item.data && item.data.includes('-')) {
+                const [ano, mes, dia] = item.data.split('-');
+                dataComparecimento = `${dia}/${mes}/${ano}`;
+            }
+            setText('ficha-data', `Data de comparecimento: ${dataComparecimento}`);
+
+            setText('ficha-unidade', `Unidade: ${normalizarTexto(item.local || 'NÚCLEO LONDRES')}`);
+
+            setText('ficha-exame-proc', normalizarTexto(item.procedimento || ''));
+            setText('ficha-exame-local', normalizarTexto(`${item.local || ''} - ${item.sala || ''}`).trim());
+            setText('ficha-exame-medico', normalizarTexto(item.medico || 'Não informado'));
+            setText('ficha-exame-espec', normalizarTexto(item.especialidade || ''));
+            setText('ficha-exame-hora', item.hora || '');
+
+            await new Promise(resolve => setTimeout(resolve, 100));
+
+            const canvas = await html2canvas(fichaCard, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                logging: false,
+                windowWidth: 900,
+                windowHeight: 1200
+            });
+
+            const imgData = canvas.toDataURL('image/png');
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+            const imgWidth = 210;
+            const imgHeight = (canvas.height * imgWidth) / canvas.width;
+            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+
+            // Download local
+            const pdfBlob = pdf.output('blob');
+            saveAs(pdfBlob, `Ficha_${item.matricula}_${item.data}.pdf`);
+
+            // Upload para Drive (se conectado)
+            uploadParaGoogleDrive(pdfBlob, `Ficha_${item.matricula}_${item.data}.pdf`);
+
+            document.body.removeChild(clone);
+            log(`PDF gerado: ${item.matricula}`);
+        } catch (error) {
+            console.error('Erro na geração da ficha:', error);
+            log('Erro ao gerar PDF da ficha: ' + error.message);
+        }
+    }
+
+    // ========== GERAÇÃO DE ETIQUETA ==========
+    function gerarEtiqueta(item) {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: [100, 150] });
+            doc.setFontSize(14);
+            doc.text('ETIQUETA DE ATENDIMENTO', 50, 20, { align: 'center' });
+            doc.setFontSize(16);
+            doc.text(normalizarTexto(item.beneficiario), 50, 45, { align: 'center' });
+            doc.setFontSize(12);
+            doc.text(`Matrícula: ${normalizarTexto(item.matricula)}`, 50, 65, { align: 'center' });
+            doc.text(`Data: ${item.data.split('-').reverse().join('/')} ${item.hora}`, 50, 80, { align: 'center' });
+            doc.text(`Sala: ${normalizarTexto(item.sala || 'N/A')}`, 50, 95, { align: 'center' });
+
+            const etiquetaBlob = doc.output('blob');
+            saveAs(etiquetaBlob, `Etiqueta_${item.matricula}_${item.data}.pdf`);
+            uploadParaGoogleDrive(etiquetaBlob, `Etiqueta_${item.matricula}_${item.data}.pdf`);
+        } catch (error) {
+            console.error('Erro na etiqueta:', error);
+            log('Erro ao gerar etiqueta: ' + error.message);
+        }
+    }
+
+    // ========== REGISTRO MANUAL ==========
+    function buscarDadosManual() {
+        const mat = document.getElementById('manualMatricula').value.trim();
+        if (cadastro[mat]) {
+            document.getElementById('manualNome').value = cadastro[mat].nome || '';
+            if (cadastro[mat].nascimento) {
+                document.getElementById('manualNascimento').value = cadastro[mat].nascimento;
+            }
+        } else {
+            document.getElementById('manualNome').value = '';
+            document.getElementById('manualNascimento').value = '';
+        }
+    }
+
+    function gerarFichaManual() {
+        const mat = document.getElementById('manualMatricula').value.trim();
+        const nome = document.getElementById('manualNome').value.trim();
+        const nasc = document.getElementById('manualNascimento').value;
+        const data = document.getElementById('manualData').value;
+        const hora = document.getElementById('manualHora').value;
+        const proc = document.getElementById('manualProcedimento').value.trim();
+        const local = document.getElementById('manualLocal').value.trim();
+        const medico = document.getElementById('manualMedico').value.trim();
+
+        if (!mat || !nome || !nasc || !data || !hora || !proc) {
+            alert('Preencha todos os campos obrigatórios (matrícula, nome, nascimento, data, hora, procedimento)');
+            return;
+        }
+
+        if (!cadastro[mat]) cadastro[mat] = {};
+        cadastro[mat].nome = nome;
+        cadastro[mat].nascimento = nasc;
+
+        const item = {
+            beneficiario: nome,
+            matricula: mat,
+            data: data,
+            hora: hora,
+            procedimento: proc,
+            local: local,
+            sala: '',
+            medico: medico,
+            especialidade: ''
+        };
+        gerarFichaHTML(item, nasc);
+        gerarEtiqueta(item);
+        log(`Ficha manual gerada para ${nome}`);
+    }
+
+    // ========== EXPORTAÇÕES ==========
+    function exportarPlanilha() {
+        const linhas = [['Matrícula', 'Nome', 'Data Nascimento', 'Data Atendimento', 'Hora', 'Procedimento', 'Local', 'Sala', 'Médico']];
+        todosAgendados.forEach(item => {
+            const nasc = cadastro[item.matricula] ? cadastro[item.matricula].nascimento : '';
+            linhas.push([
+                item.matricula,
+                item.beneficiario,
+                nasc,
+                item.data,
+                item.hora,
+                item.procedimento,
+                item.local,
+                item.sala,
+                item.medico
+            ]);
+        });
+        let csv = linhas.map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'atendimentos.csv');
+    }
+
+    function baixarCadastro() {
+        const dataStr = JSON.stringify(cadastro, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        saveAs(blob, 'cadastro.json');
+    }
+
+    // ========== GOOGLE DRIVE ==========
+    let driveAccessToken = null;
+    let driveFolderId = null;
+    let tokenClient;
+    let gapiInited = false;
+    let gisInited = false;
+
+    // 🔴 COLOQUE SEU CLIENT ID AQUI (substitua os colchetes)
+    const CLIENT_ID = '442012632501-ks0ihk37u50kph3ccu3i5lmsvchapd91.apps.googleusercontent.com';
+    const DISCOVERY_DOC = 'https://www.googleapis.com/discovery/v1/apis/drive/v3/rest';
+    const SCOPES = 'https://www.googleapis.com/auth/drive.file';
+
+    function gapiLoaded() {
+        gapi.load('client', initializeGapiClient);
+    }
+
+    async function initializeGapiClient() {
+        await gapi.client.init({
+            discoveryDocs: [DISCOVERY_DOC],
+        });
+        gapiInited = true;
+        maybeEnableDriveButtons();
+    }
+
+    function gisLoaded() {
+        tokenClient = google.accounts.oauth2.initTokenClient({
+            client_id: CLIENT_ID,
+            scope: SCOPES,
+            callback: '',
+        });
+        gisInited = true;
+        maybeEnableDriveButtons();
+    }
+
+    function maybeEnableDriveButtons() {
+        if (gapiInited && gisInited) {
+            document.getElementById('btn-conectar').disabled = false;
+        }
+    }
+
+    window.conectarGoogleDrive = function() {
+        tokenClient.callback = async (resp) => {
+            if (resp.error !== undefined) {
+                console.error(resp);
+                alert('Erro na autenticação: ' + resp.error);
+                return;
+            }
+            driveAccessToken = resp.access_token;
+            document.getElementById('drive-status').innerText = 'Conectado';
+            document.getElementById('btn-conectar').innerText = 'Reconectar';
+            document.getElementById('btn-pasta').disabled = false;
+
+            const savedFolderId = localStorage.getItem('driveFolderId');
+            if (savedFolderId) {
+                driveFolderId = savedFolderId;
+                document.getElementById('pasta-destino').value = `Pasta ID: ${savedFolderId}`;
+            } else {
+                document.getElementById('pasta-destino').value = 'Nenhuma pasta configurada';
+            }
+        };
+
+        if (!driveAccessToken) {
+            tokenClient.requestAccessToken({ prompt: 'consent' });
+        } else {
+            tokenClient.requestAccessToken({ prompt: '' });
+        }
+    };
+
+    window.criarPastaDrive = async function() {
+        if (!driveAccessToken) {
+            alert('Conecte-se primeiro.');
+            return;
+        }
+
+        gapi.client.setToken({ access_token: driveAccessToken });
+
+        try {
+            const response = await gapi.client.drive.files.list({
+                q: "name='Contingência Londres' and mimeType='application/vnd.google-apps.folder' and trashed=false",
+                fields: 'files(id, name)',
+                spaces: 'drive'
+            });
+
+            const files = response.result.files;
+            if (files && files.length > 0) {
+                driveFolderId = files[0].id;
+                localStorage.setItem('driveFolderId', driveFolderId);
+                document.getElementById('pasta-destino').value = `Pasta existente: ${driveFolderId}`;
+                log('Pasta de backup já existe no Drive.');
+            } else {
+                const folderMetadata = {
+                    name: 'Contingência Londres',
+                    mimeType: 'application/vnd.google-apps.folder'
+                };
+                const folder = await gapi.client.drive.files.create({
+                    resource: folderMetadata,
+                    fields: 'id'
+                });
+                driveFolderId = folder.result.id;
+                localStorage.setItem('driveFolderId', driveFolderId);
+                document.getElementById('pasta-destino').value = `Nova pasta criada: ${driveFolderId}`;
+                log('Pasta de backup criada no Drive.');
+            }
+        } catch (err) {
+            console.error('Erro ao criar/verificar pasta:', err);
+            alert('Erro ao acessar o Drive: ' + err.message);
+        }
+    };
+
+    async function uploadParaGoogleDrive(blob, nomeArquivo) {
+        if (!driveAccessToken || !driveFolderId) {
+            log('Upload para Drive ignorado: não conectado ou pasta não configurada.');
+            return;
+        }
+
+        gapi.client.setToken({ access_token: driveAccessToken });
+
+        const reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.onloadend = async () => {
+            const base64 = reader.result.split(',')[1];
+
+            const fileMetadata = {
+                name: nomeArquivo,
+                parents: [driveFolderId]
+            };
+
+            const media = {
+                mimeType: 'application/pdf',
+                body: base64
+            };
+
+            try {
+                const response = await gapi.client.drive.files.create({
+                    resource: fileMetadata,
+                    media: media,
+                    fields: 'id, name'
+                });
+                log(`Upload realizado: ${response.result.name} (ID: ${response.result.id})`);
+            } catch (err) {
+                console.error('Erro no upload:', err);
+                log('Erro no upload para Drive: ' + err.message);
+            }
+        };
+    }
+
+    // Inicialização
+    window.onload = function() {
+        const hoje = new Date();
+        const hojeStr = `${hoje.getFullYear()}-${String(hoje.getMonth()+1).padStart(2,'0')}-${String(hoje.getDate()).padStart(2,'0')}`;
+        document.getElementById('manualData').value = hojeStr;
+        gapiLoaded();
+        gisLoaded();
+    };
+</script>
+</body>
+</html>
