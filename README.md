@@ -122,11 +122,5 @@ Distribuído sob a licença MIT. Consulte o arquivo `LICENSE` para mais informa�
 
 ---
 
-## 🙏 Agradecimentos
-
-- Equipe de TI da Prevent Senior pelo suporte na definição dos requisitos.
-- Comunidade open‑source pelas bibliotecas utilizadas.
-
----
 
 *Última atualização: Abril de 2026*
