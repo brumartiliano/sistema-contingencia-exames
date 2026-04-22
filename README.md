@@ -12,7 +12,7 @@
 
 ## 📌 Sobre o Projeto
 
-O **Núcleo Atende +** é uma ferramenta web **100% client‑side** (front‑end puro) criada para situações de contingência, quando o sistema principal de agendamentos está indisponível. Ele permite:
+O **Núcleo Atende +** é uma ferramenta web **100% client‑side** (front‑end puro) criada para situações de contingência, quando o sistema principal de atendimento está indisponível. Ele permite:
 
 - Importar planilhas de agendamento (exames e consultas)
 - Buscar pacientes por nome ou matrícula
