@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Núcleo Atende + - Prevent Senior</title>
-    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="Nucleo_Atende_Contingencia_Atalho.ico">
     <link rel="shortcut icon" href="Nucleo_Atende_Contingencia_Atalho.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -122,7 +121,7 @@
         <div class="text-area"><div class="title"><span class="nucleo">Núcleo</span> <span class="atende">Atende +</span></div><div class="subtitle">CONTINGÊNCIA DE ATENDIMENTO</div></div>
     </div>
     <div class="main-content">
-        <!-- Seção 1: Carregar agendas + NOME DO USUÁRIO -->
+        <!-- Seção 1: Carregar agendas + Nome do usuário -->
         <div class="section-card">
             <div class="section-title"><i class="fas fa-upload"></i> 1. Carregar agendas</div>
             <div class="form-grid">
@@ -488,7 +487,7 @@
         return canvas ? canvas.toDataURL() : '';
     }
 
-    // ==================== MAPEAMENTO DE ENDEREÇOS ====================
+    // ==================== MAPEAMENTO DE ENDEREÇOS (normalizado) ====================
     const enderecosUnidades = {
         "nucleo de medicina avancada e diagnostica alemanha": "Alameda Santos, 960 - Cerqueira César - São Paulo - SP",
         "nucleo de medicina avancada e diagnostica barcelona": "Rua Lourenço Marques, 158 - Vila Olímpia - São Paulo - SP",
@@ -524,15 +523,20 @@
     }
 
     function obterEnderecoUnidade(nomeUnidade) {
-        if (!nomeUnidade) return '';
+        if (!nomeUnidade) {
+            console.log('⚠️ Unidade vazia, retornando endereço vazio.');
+            return '';
+        }
         const chaveNormalizada = normalizarNomeUnidade(nomeUnidade);
+        console.log(`🔍 Buscando endereço para: "${nomeUnidade}" (normalizado: "${chaveNormalizada}")`);
         for (let [chave, endereco] of Object.entries(enderecosUnidades)) {
             if (chave === chaveNormalizada) {
+                console.log(`✅ Encontrou: "${chave}" -> "${endereco}"`);
                 return endereco;
             }
         }
-        // Se não encontrou, retorna vazio (não mostra endereço genérico)
-        return '';
+        console.log(`❌ Unidade não encontrada, retornando vazio.`);
+        return ''; // <--- RETORNA VAZIO
     }
 
     function montarRodape(unidade) {
@@ -540,8 +544,13 @@
         const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 80);
         const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 80);
         const endereco = obterEnderecoUnidade(unidade);
+        console.log(`📦 Endereço retornado para "${unidade}": "${endereco}"`);
+
+        // Se endereço estiver vazio, NÃO exibe a linha do endereço
+        const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
+
         return `<div style="background: #f0f4f8; padding: 5mm; margin-top: 8mm; border-top: 1px solid #ccc; font-size: 10px; line-height: 1.2; width: 100%;">
-                    <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}${endereco ? `<br>${escapeHtml(endereco)}` : ''}</div>
+                    <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
                     <div style="margin: 4px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304 | Site: www.preventsenior.com.br</div>
                     <div><strong>RESULTADOS PELA INTERNET</strong></div>
                     <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
@@ -589,7 +598,6 @@
         return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS AGENDADAS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data da Consulta:</strong> ${dataFormat}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">🩺 Dados da Consulta</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Anamnese</h3><div style="font-size: 12px; line-height: 1.4;"><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(localConsulta)}</div>`;
     }
 
-    // ==================== LIVRE DEMANDA E ENCAIXE ====================
     function gerarLivreDemanda() {
         const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
         if (!nomeUsuario) {
