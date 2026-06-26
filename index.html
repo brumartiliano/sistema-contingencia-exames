@@ -86,6 +86,20 @@
             padding: 8px 12px;
         }
         .item-exame strong, .item-consulta strong { color: #002b49; }
+
+        .observacao-export {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #fff8e7;
+            border-left: 4px solid #ffb347;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #6a5b3a;
+        }
+        .observacao-export i {
+            color: #ff6b35;
+            margin-right: 6px;
+        }
     </style>
 </head>
 <body>
@@ -95,15 +109,21 @@
         <div class="text-area"><div class="title"><span class="nucleo">Núcleo</span> <span class="atende">Atende +</span></div><div class="subtitle">CONTINGÊNCIA DE ATENDIMENTO</div></div>
     </div>
     <div class="main-content">
-        <!-- Seção 1: Carregar agendas -->
+        <!-- Seção 1: Carregar agendas + NOME DO USUÁRIO -->
         <div class="section-card">
             <div class="section-title"><i class="fas fa-upload"></i> 1. Carregar agendas</div>
             <div class="form-grid">
+                <div class="form-group">
+                    <label>👤 Nome do Usuário (obrigatório)</label>
+                    <input type="text" id="nomeUsuario" placeholder="Digite seu nome completo" style="border: 2px solid #0078bf;">
+                    <div style="font-size: 12px; color: #666; margin-top: 2px;">Identifica quem gerou cada formulário</div>
+                </div>
                 <div class="form-group"><label>📋 Planilha de EXAMES</label><input type="file" id="fileExames" accept=".xlsx, .xls, .csv"><div class="file-info" id="infoExames">Nenhum arquivo</div></div>
                 <div class="form-group"><label>🩺 Planilha de CONSULTAS</label><input type="file" id="fileConsultas" accept=".xlsx, .xls, .csv"><div class="file-info" id="infoConsultas">Nenhum arquivo</div></div>
             </div>
             <div class="button-group"><button class="btn btn-primary" id="btnCarregarExames"><i class="fas fa-file-excel"></i> Carregar Exames</button><button class="btn btn-primary" id="btnCarregarConsultas"><i class="fas fa-file-excel"></i> Carregar Consultas</button></div>
         </div>
+
         <!-- Seção 2: Busca e geração -->
         <div class="section-card">
             <div class="section-title"><i class="fas fa-search"></i> 2. Localizar paciente e gerar formulários</div>
@@ -112,10 +132,16 @@
             <div id="examesPanel" class="panel"><div class="patient-list" id="listaExames"></div></div>
             <div id="consultasPanel" class="panel" style="display: none;"><div class="patient-list" id="listaConsultas"></div></div>
             <div id="ambosPanel" class="panel" style="display: none;"><div class="patient-list" id="listaAmbos"></div></div>
-            <div class="button-group"><button class="btn btn-warning" id="btnExportarRelatorio"><i class="fas fa-file-excel"></i> 📊 Exportar relatório de atendimentos (Excel)</button></div>
+            <div class="button-group">
+                <button class="btn btn-warning" id="btnExportarRelatorio"><i class="fas fa-file-excel"></i> 📊 Exportar relatório de atendimentos (Excel)</button>
+            </div>
+            <div class="observacao-export">
+                <i class="fas fa-info-circle"></i> <strong>Lembrete:</strong> Antes de fechar ou atualizar a página, <strong>sempre exporte o relatório Excel</strong> para não perder os atendimentos registrados.
+            </div>
             <div class="log-area" id="log"></div>
             <div id="errorArea" class="error-area"></div>
         </div>
+
         <!-- Seção 3: Registro Manual (Exames Livre Demanda) -->
         <div class="section-card">
             <div class="section-title"><i class="fas fa-pen"></i> 3. Registro Manual (Exames Livre Demanda)</div>
@@ -127,13 +153,14 @@
                 <div class="form-group"><label>Data do exame:</label><input type="date" id="manualData"></div>
                 <div class="form-group"><label>Hora:</label><input type="time" id="manualHora"></div>
                 <div class="form-group"><label>Procedimento:</label><select id="manualProcedimento"><option>Analises Clinicas</option><option>Eletrocardiograma</option><option>Citologia Oncótica</option><option>Raio-X</option></select></div>
-                <div class="form-group"><label>Unidade / Local:</label><select id="manualLocal"><option>Núcleo de Medicina Avançada e Diagnóstica Alemanha</option><option>Núcleo de Medicina Avançada e Diagnóstica Barcelona</option><option>Núcleo de Medicina Avançada e Reabilitação Prevent Senior Los Angeles (Clodomiro)</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo Amaro (João Dias)</option><option>Núcleo de Medicina Avançada Premium Prevent Senior Ibirapuera</option><option>Núcleo de Medicina Avançada Premium Prevent Senior Jardim São Paulo</option><option>Núcleo de Medicina Avançada Prevent Senior Bela Vista (São Carlos do Pinhal)</option><option>Núcleo de Medicina Avançada Prevent Senior Madrid</option><option>Núcleo de Prevenção Senior e Centro de Diagnósticos Santo André</option><option>Núcleo de Medicina Avançada e Diagnóstica Londres</option><option>Núcleo de Ortopedia e Traumatologia Prevent Senior Jardim Anália Franco - Florença</option><option>Prevent Senior Medicina Diagnóstica Mooca (Paes de Barros)</option><option>Núcleo de Medicina Avançada e Diagnóstica Brasil</option><option>Núcleo de Medicina Diagnóstica por Imagem Tatuapé (Estevão Pernet)</option><option>Núcleo de Oftalmologia Prevent Senior Jardim Paulista (Alameda Campinas)</option><option>Núcleo de Oncologia e Hematologia Prevent Senior Vila Mariana (Vergueiro)</option><option>Prevent Senior Medicina Diagnóstica Jardim Paulista</option><option>Núcleo de Medicina Avançada e Diagnóstica Cascais</option><option>Núcleo de Medicina Avançada Prevent Senior Santos (Tibiriçá)</option><option>Núcleo de Medicina Avançada e Diagnóstica Malibu</option><option>Núcleo de Medicina Avançada e Diagnóstica Taiti</option><option>Núcleo de Medicina Avançada Prevent Senior Rio Sul</option></select></div>
+                <div class="form-group"><label>Unidade / Local:</label><select id="manualLocal"><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Alemanha</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Barcelona</option><option>Núcleo de Medicina Avançada e Reabilitação Prevent Senior Los Angeles</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo Amaro</option><option>Núcleo de Medicina Avançada Prevent Senior Ibirapuera</option><option>Núcleo de Medicina Avançada Prevent Senior Jardim São Paulo</option><option>Núcleo de Medicina Avançada Prevent Senior Bela Vista</option><option>Núcleo de Medicina Avançada Prevent Senior Madrid</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo André</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Londres</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Florença</option><option>Prevent Senior Medicina Diagnóstica Mooca</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Brasil</option><option>Núcleo de Medicina Diagnóstica por Imagem Tatuapé</option><option>Núcleo de Oftalmologia Prevent Senior Jardim Paulista</option><option>Núcleo de Oncologia e Hematologia Prevent Senior Vila Mariana</option><option>Prevent Senior Medicina Diagnóstica Jardim Paulista</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Cascais</option><option>Núcleo de Medicina Avançada Prevent Senior Santos</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Malibu</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Taiti</option><option>Núcleo de Medicina Avançada Prevent Senior Rio Sul</option></select></div>
                 <div class="form-group"><label>Andar/Sala:</label><input type="text" id="manualSala"></div>
                 <div class="form-group"><label>Profissional:</label><select id="manualProfissional"><option>Médico</option><option>Enfermagem</option><option>Técnico de Radiologia</option></select></div>
                 <div class="form-group"><label>Observação:</label><textarea id="manualObs" rows="2"></textarea></div>
             </div>
             <div class="button-group"><button class="btn btn-primary" id="btnGerarManual"><i class="fas fa-print"></i> Gerar formulário + etiqueta</button></div>
         </div>
+
         <!-- Seção 4: Registro Manual (Encaixe) -->
         <div class="section-card">
             <div class="section-title"><i class="fas fa-plus-circle"></i> 4. Registro Manual (Encaixe)</div>
@@ -146,7 +173,7 @@
                 <div class="form-group"><label>Hora:</label><input type="time" id="encaixeHora"></div>
                 <div class="form-group"><label>Tipo:</label><select id="encaixeTipo"><option value="exame">Exame</option><option value="consulta">Consulta</option></select></div>
                 <div class="form-group"><label>Procedimento (exame) / Especialidade (consulta):</label><input type="text" id="encaixeProcedimento"></div>
-                <div class="form-group"><label>Unidade / Local:</label><select id="encaixeLocal"><option>Núcleo de Medicina Avançada e Diagnóstica Alemanha</option><option>Núcleo de Medicina Avançada e Diagnóstica Barcelona</option><option>Núcleo de Medicina Avançada e Reabilitação Prevent Senior Los Angeles (Clodomiro)</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo Amaro (João Dias)</option><option>Núcleo de Medicina Avançada Premium Prevent Senior Ibirapuera</option><option>Núcleo de Medicina Avançada Premium Prevent Senior Jardim São Paulo</option><option>Núcleo de Medicina Avançada Prevent Senior Bela Vista (São Carlos do Pinhal)</option><option>Núcleo de Medicina Avançada Prevent Senior Madrid</option><option>Núcleo de Prevenção Senior e Centro de Diagnósticos Santo André</option><option>Núcleo de Medicina Avançada e Diagnóstica Londres</option><option>Núcleo de Ortopedia e Traumatologia Prevent Senior Jardim Anália Franco - Florença</option><option>Prevent Senior Medicina Diagnóstica Mooca (Paes de Barros)</option><option>Núcleo de Medicina Avançada e Diagnóstica Brasil</option><option>Núcleo de Medicina Diagnóstica por Imagem Tatuapé (Estevão Pernet)</option><option>Núcleo de Oftalmologia Prevent Senior Jardim Paulista (Alameda Campinas)</option><option>Núcleo de Oncologia e Hematologia Prevent Senior Vila Mariana (Vergueiro)</option><option>Prevent Senior Medicina Diagnóstica Jardim Paulista</option><option>Núcleo de Medicina Avançada e Diagnóstica Cascais</option><option>Núcleo de Medicina Avançada Prevent Senior Santos (Tibiriçá)</option><option>Núcleo de Medicina Avançada e Diagnóstica Malibu</option><option>Núcleo de Medicina Avançada e Diagnóstica Taiti</option><option>Núcleo de Medicina Avançada Prevent Senior Rio Sul</option></select></div>
+                <div class="form-group"><label>Unidade / Local:</label><select id="encaixeLocal"><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Alemanha</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Barcelona</option><option>Núcleo de Medicina Avançada e Reabilitação Prevent Senior Los Angeles</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo Amaro</option><option>Núcleo de Medicina Avançada Prevent Senior Ibirapuera</option><option>Núcleo de Medicina Avançada Prevent Senior Jardim São Paulo</option><option>Núcleo de Medicina Avançada Prevent Senior Bela Vista</option><option>Núcleo de Medicina Avançada Prevent Senior Madrid</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo André</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Londres</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Florença</option><option>Prevent Senior Medicina Diagnóstica Mooca</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Brasil</option><option>Núcleo de Medicina Diagnóstica por Imagem Tatuapé</option><option>Núcleo de Oftalmologia Prevent Senior Jardim Paulista</option><option>Núcleo de Oncologia e Hematologia Prevent Senior Vila Mariana</option><option>Prevent Senior Medicina Diagnóstica Jardim Paulista</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Cascais</option><option>Núcleo de Medicina Avançada Prevent Senior Santos</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Malibu</option><option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Taiti</option><option>Núcleo de Medicina Avançada Prevent Senior Rio Sul</option></select></div>
                 <div class="form-group"><label>Andar/Sala:</label><input type="text" id="encaixeSala"></div>
                 <div class="form-group"><label>Profissional:</label><select id="encaixeProfissional"><option>Médico</option><option>Enfermagem</option><option>Técnico de Radiologia</option></select></div>
                 <div class="form-group"><label>Observação:</label><textarea id="encaixeObs" rows="2"></textarea></div>
@@ -165,6 +192,7 @@
     let groupedConsultas = new Map();
     let currentTab = "exames";
     let historicoGeracoes = [];
+    let usuarioAtual = "";
 
     const fileExames = document.getElementById('fileExames');
     const fileConsultas = document.getElementById('fileConsultas');
@@ -174,38 +202,498 @@
     const listaAmbosDiv = document.getElementById('listaAmbos');
     const logDiv = document.getElementById('log');
     const errorArea = document.getElementById('errorArea');
+    const nomeUsuarioInput = document.getElementById('nomeUsuario');
 
+    // ==================== POPUP AO ATUALIZAR/FECHAR ====================
+    window.addEventListener('beforeunload', function (e) {
+        // Se houver atendimentos registrados no histórico, exibe o alerta
+        if (historicoGeracoes.length > 0) {
+            const message = "⚠️ Tem certeza? Já extraiu seu relatório em Excel? Os atendimentos registrados serão perdidos se você fechar ou atualizar a página sem exportar!";
+            e.preventDefault();
+            e.returnValue = message;
+            return message;
+        }
+    });
+
+    // ==================== FUNÇÕES AUXILIARES ====================
     function log(msg) { const p = document.createElement('div'); p.textContent = new Date().toLocaleTimeString() + ' - ' + msg; logDiv.appendChild(p); logDiv.scrollTop = logDiv.scrollHeight; console.log(msg); }
     function showError(msg) { errorArea.style.display = 'block'; errorArea.innerHTML += `<div>❌ ${msg}</div>`; log(msg); }
     function normalizar(texto) { if (texto === undefined || texto === null) return ''; return String(texto).normalize('NFC').trim(); }
     function parseData(valor) { if (!valor) return ''; if (typeof valor === 'number') { const date = XLSX.SSF.parse_date_code(valor); if (date) return `${date.y}-${String(date.m).padStart(2,'0')}-${String(date.d).padStart(2,'0')}`; } let d = new Date(valor); if (!isNaN(d)) return d.toISOString().split('T')[0]; let str = String(valor).split(' ')[0]; let partes = str.split('/'); if (partes.length === 3) return `${partes[2]}-${partes[1].padStart(2,'0')}-${partes[0].padStart(2,'0')}`; return str; }
     function parseHora(valor) { if (valor === undefined || valor === null) return ''; if (typeof valor === 'number') { let totalSec = Math.round(valor * 24 * 3600); let h = Math.floor(totalSec / 3600); let m = Math.floor((totalSec % 3600) / 60); return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`; } let str = String(valor).trim(); if (str === '') return ''; let match = str.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?/); if (match) { let hora = match[1].padStart(2,'0'); let minuto = match[2]; return `${hora}:${minuto}`; } let matchAmPm = str.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i); if (matchAmPm) { let hora = parseInt(matchAmPm[1]); let minuto = matchAmPm[2]; let periodo = matchAmPm[3].toUpperCase(); if (periodo === 'PM' && hora !== 12) hora += 12; if (periodo === 'AM' && hora === 12) hora = 0; return `${String(hora).padStart(2,'0')}:${minuto}`; } return ''; }
     async function lerPlanilha(file) { return new Promise((resolve, reject) => { if (file.name.toLowerCase().endsWith('.csv')) { const reader = new FileReader(); reader.onload = (e) => { try { const text = e.target.result; const linhas = text.split(/\r?\n/).filter(l => l.trim().length > 0); if (linhas.length === 0) reject('CSV vazio'); const separador = linhas[0].includes(';') ? ';' : ','; const dados = linhas.map(line => line.split(separador).map(cell => cell.replace(/^"|"$/g, '').trim())); const header = dados[0]; const rows = dados.slice(1); resolve({ header, rows, allRows: [header, ...rows] }); } catch(err) { reject(err); } }; reader.onerror = reject; reader.readAsText(file, 'UTF-8'); } else { const reader = new FileReader(); reader.onload = (e) => { try { const data = new Uint8Array(e.target.result); const workbook = XLSX.read(data, { type: 'array' }); const sheet = workbook.Sheets[workbook.SheetNames[0]]; let rows = XLSX.utils.sheet_to_json(sheet, { header: 1, defval: '' }); if (!rows.length) reject('Planilha vazia'); const header = rows[0].map(c => normalizar(String(c || ''))); resolve({ header, rows: rows.slice(1), allRows: rows }); } catch(err) { reject(err); } }; reader.onerror = reject; reader.readAsArrayBuffer(file); } }); }
-    async function carregarExames() { const file = fileExames.files[0]; if (!file) { alert('Selecione o arquivo de exames'); return; } document.getElementById('infoExames').innerText = file.name; try { const { header, rows } = await lerPlanilha(file); log('Cabeçalhos encontrados (exames): ' + header.join(', ')); const findIndex = (patterns) => { for (let i = 0; i < header.length; i++) { let col = header[i].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); for (let p of patterns) if (col.includes(p)) return i; } return -1; }; const idx = { data: findIndex(['data agendada', 'dataagendada', 'data', 'dt']), hora: findIndex(['hora agendada', 'horaagendada', 'hora', 'horario']), matricula: findIndex(['matricula', 'matrícula', 'matr']), beneficiario: findIndex(['beneficiario', 'beneficiário', 'nome', 'paciente']), procedimento: findIndex(['procedimento', 'exame']), unidade: findIndex(['unidade', 'local']), andarSala: findIndex(['andar/sala', 'andar', 'sala']), medico: findIndex(['nome médico', 'nome medico', 'médico', 'medico']), status: findIndex(['status', 'situacao']) }; if (idx.matricula === -1 || idx.beneficiario === -1) throw new Error('Colunas Matricula/Beneficiario não encontradas'); examesRaw = []; for (let row of rows) { if (!row || row.every(c => !c)) continue; let status = (idx.status !== -1 ? normalizar(row[idx.status] || '') : '').toUpperCase(); if (status && status !== 'ATIVADO' && status !== 'ATIVO') continue; examesRaw.push({ data: parseData(row[idx.data]), hora: parseHora(row[idx.hora]), matricula: normalizar(row[idx.matricula] || ''), beneficiario: normalizar(row[idx.beneficiario] || ''), procedimento: normalizar(row[idx.procedimento] || ''), unidade: normalizar(row[idx.unidade] || ''), andarSala: normalizar(row[idx.andarSala] || ''), medico: normalizar(row[idx.medico] || '') }); } log(`Exames carregados: ${examesRaw.length} registros ativos`); agruparExames(); renderizarLista('exames'); renderizarLista('ambos'); } catch (err) { alert('Erro: '+err.message); showError(err.message); } }
-    function agruparExames() { groupedExames.clear(); for (let ex of examesRaw) { if (!ex.matricula || !ex.data) continue; let key = `${ex.matricula}|${ex.data}`; if (!groupedExames.has(key)) { groupedExames.set(key, { matricula: ex.matricula, beneficiario: ex.beneficiario, data: ex.data, itens: [], nascimento: '', acompanhante: 'Não' }); } groupedExames.get(key).itens.push(ex); } log(`Agrupados ${groupedExames.size} pacientes/dia para exames`); }
-    async function carregarConsultas() { const file = fileConsultas.files[0]; if (!file) { alert('Selecione o arquivo de consultas'); return; } document.getElementById('infoConsultas').innerText = file.name; try { const { header, rows } = await lerPlanilha(file); log('Cabeçalhos encontrados (consultas): ' + header.join(', ')); const idx = { local: header.findIndex(h => /local/i.test(h)), profissional: header.findIndex(h => /profissional/i.test(h)), dataConsulta: header.findIndex(h => /data consulta/i.test(h) || /data da consulta/i.test(h) || /dt consulta/i.test(h)), hora: header.findIndex(h => /hora consulta/i.test(h) || /hora da consulta/i.test(h) || /horario consulta/i.test(h)), beneficiario: header.findIndex(h => /beneficiario/i.test(h)), matricula: header.findIndex(h => /matricula/i.test(h)), subespecialidade: header.findIndex(h => /subespecialidade/i.test(h)), status: header.findIndex(h => /status/i.test(h)) }; if (idx.matricula === -1 || idx.beneficiario === -1) throw new Error('Colunas MATRICULA e/ou BENEFICIARIO não encontradas'); consultasRaw = []; for (let row of rows) { if (!row || row.every(c => !c)) continue; const consulta = { data: parseData(row[idx.dataConsulta]), hora: parseHora(row[idx.hora]), matricula: normalizar(row[idx.matricula] || ''), beneficiario: normalizar(row[idx.beneficiario] || ''), local: normalizar(row[idx.local] || ''), profissional: normalizar(row[idx.profissional] || ''), subespecialidade: normalizar(row[idx.subespecialidade] || '') }; if (consulta.matricula && consulta.beneficiario && consulta.data) consultasRaw.push(consulta); } log(`Consultas carregadas: ${consultasRaw.length} registros ativos`); agruparConsultas(); renderizarLista('consultas'); renderizarLista('ambos'); } catch (err) { alert('Erro consultas: ' + err.message); showError(err.message); } }
-    function agruparConsultas() { groupedConsultas.clear(); for (let c of consultasRaw) { if (!c.matricula || !c.data) continue; let key = `${c.matricula}|${c.data}`; if (!groupedConsultas.has(key)) { groupedConsultas.set(key, { matricula: c.matricula, beneficiario: c.beneficiario, data: c.data, itens: [], nascimento: '', acompanhante: 'Não' }); } groupedConsultas.get(key).itens.push(c); } log(`Agrupados ${groupedConsultas.size} pacientes/dia para consultas`); }
-    function escapeHtml(str) { if (str === undefined || str === null) return ''; const s = String(str); return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
-    function registrarGeracao(tipo, paciente, dataAtendimento, procedimentoEspecialidade, horario, profissional, unidadeLocal) { const now = new Date(); const dataHoraGeracao = now.toLocaleString('pt-BR'); historicoGeracoes.push({ dataHoraGeracao: dataHoraGeracao, nomePaciente: paciente.beneficiario, matricula: paciente.matricula, dataAtendimento: dataAtendimento.split('-').reverse().join('/'), tipo: tipo, procedimentoEspecialidade: procedimentoEspecialidade, horario: horario, profissional: profissional, unidadeLocal: unidadeLocal }); log(`📝 Registrado: ${tipo} - ${paciente.beneficiario} - ${dataAtendimento}`); }
-    function exportarRelatorioExcel() { if (historicoGeracoes.length === 0) { alert('Nenhum atendimento gerado ainda. Gere formulários para que o relatório seja preenchido.'); return; } const dados = historicoGeracoes.map(reg => ({ 'Data/Hora da Geração': reg.dataHoraGeracao, 'Nome do Paciente': reg.nomePaciente, 'Matrícula': reg.matricula, 'Data do Atendimento': reg.dataAtendimento, 'Tipo': reg.tipo, 'Procedimento / Especialidade': reg.procedimentoEspecialidade, 'Horário': reg.horario, 'Profissional / Médico': reg.profissional, 'Unidade / Local': reg.unidadeLocal })); const ws = XLSX.utils.json_to_sheet(dados); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, 'Atendimentos'); const now = new Date(); const timestamp = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`; XLSX.writeFile(wb, `relatorio_atendimentos_${timestamp}.xlsx`); log(`📊 Relatório exportado com ${historicoGeracoes.length} registros.`); }
-    function renderizarLista(tipo) { try { const searchTerm = searchInput.value.toLowerCase(); let grupos = []; let container; if (tipo === 'exames') { grupos = Array.from(groupedExames.values()); container = listaExamesDiv; } else if (tipo === 'consultas') { grupos = Array.from(groupedConsultas.values()); container = listaConsultasDiv; } else if (tipo === 'ambos') { const ambosMap = new Map(); for (let [key, grupoExame] of groupedExames.entries()) { if (groupedConsultas.has(key)) { const grupoConsulta = groupedConsultas.get(key); ambosMap.set(key, { matricula: grupoExame.matricula, beneficiario: grupoExame.beneficiario, data: grupoExame.data, exames: grupoExame.itens, consultas: grupoConsulta.itens, nascimento: grupoExame.nascimento || grupoConsulta.nascimento || '', acompanhante: grupoExame.acompanhante || 'Não' }); } } grupos = Array.from(ambosMap.values()); container = listaAmbosDiv; } else return; if (!container) return; if (grupos.length === 0) { container.innerHTML = '<div style="padding:20px; text-align:center;">Nenhum dado encontrado.</div>'; return; } grupos = grupos.filter(g => g.beneficiario.toLowerCase().includes(searchTerm) || g.matricula.includes(searchTerm)); if (grupos.length === 0) { container.innerHTML = '<div style="padding:20px; text-align:center;">Nenhum paciente encontrado.</div>'; return; } container.innerHTML = ''; for (let grupo of grupos) { const card = document.createElement('div'); card.className = 'patient-card'; const dataFormatada = grupo.data.split('-').reverse().join('/'); const nascimentoAtual = grupo.nascimento || ''; if (tipo === 'exames') { let itensHtml = ''; for (let item of grupo.itens) { itensHtml += `<div class="item-exame"><strong>🧪 ${escapeHtml(item.procedimento || 'Procedimento não informado')}</strong><br>🕒 ${escapeHtml(item.hora || 'Horário não informado')} | 📍 ${escapeHtml(item.unidade)} ${item.andarSala ? '- Sala '+escapeHtml(item.andarSala) : ''}<br>👨‍⚕️ Profissional: ${escapeHtml(item.medico || 'Não informado')}</div>`; } card.innerHTML = `<div class="patient-header"><div><span class="patient-name">${escapeHtml(grupo.beneficiario)}</span> (${escapeHtml(grupo.matricula)})</div><div><strong>Data:</strong> ${dataFormatada}</div><div><button class="btn btn-primary btn-gerar">📄 Gerar Formulário + Etiqueta</button></div></div><div class="nasc-acomp"><div><label>📅 Nascimento:</label> <input type="date" class="nasc-date" value="${escapeHtml(nascimentoAtual)}"></div><div><label>👥 Acompanhante:</label> <select class="acomp-select"><option value="Não" ${grupo.acompanhante==='Não'?'selected':''}>Não</option><option value="Sim" ${grupo.acompanhante==='Sim'?'selected':''}>Sim</option></select></div></div><div class="patient-details"><strong>📋 Itens (${grupo.itens.length}):</strong><div class="event-list">${itensHtml}</div></div>`; const nascInput = card.querySelector('.nasc-date'); const acompSelect = card.querySelector('.acomp-select'); const btn = card.querySelector('.btn-gerar'); nascInput.addEventListener('change', () => grupo.nascimento = nascInput.value); acompSelect.addEventListener('change', () => grupo.acompanhante = acompSelect.value); btn.addEventListener('click', async () => { await gerarFichaExamesAgendados(grupo); for (let item of grupo.itens) { registrarGeracao('Exame', grupo, grupo.data, item.procedimento || 'Procedimento', item.hora || 'Horário não informado', item.medico || 'Profissional não informado', item.unidade || 'Unidade não informada'); } }); } else if (tipo === 'consultas') { let itensHtml = ''; for (let item of grupo.itens) { itensHtml += `<div class="item-consulta"><strong>🩺 ${escapeHtml(item.subespecialidade || 'Especialidade não informada')}</strong><br>🕒 ${escapeHtml(item.hora || 'Horário não informado')} | 📍 ${escapeHtml(item.local)}<br>👨‍⚕️ Profissional: ${escapeHtml(item.profissional || 'Não informado')}</div>`; } card.innerHTML = `<div class="patient-header"><div><span class="patient-name">${escapeHtml(grupo.beneficiario)}</span> (${escapeHtml(grupo.matricula)})</div><div><strong>Data:</strong> ${dataFormatada}</div><div><button class="btn btn-primary btn-gerar">📄 Gerar Formulário</button></div></div><div class="nasc-acomp"><div><label>📅 Nascimento:</label> <input type="date" class="nasc-date" value="${escapeHtml(nascimentoAtual)}"></div><div><label>👥 Acompanhante:</label> <select class="acomp-select"><option value="Não" ${grupo.acompanhante==='Não'?'selected':''}>Não</option><option value="Sim" ${grupo.acompanhante==='Sim'?'selected':''}>Sim</option></select></div></div><div class="patient-details"><strong>📋 Itens (${grupo.itens.length}):</strong><div class="event-list">${itensHtml}</div></div>`; const nascInput = card.querySelector('.nasc-date'); const acompSelect = card.querySelector('.acomp-select'); const btn = card.querySelector('.btn-gerar'); nascInput.addEventListener('change', () => grupo.nascimento = nascInput.value); acompSelect.addEventListener('change', () => grupo.acompanhante = acompSelect.value); btn.addEventListener('click', async () => { await gerarFichaConsultaAgendada(grupo); for (let item of grupo.itens) { registrarGeracao('Consulta', grupo, grupo.data, item.subespecialidade || 'Especialidade', item.hora || 'Horário não informado', item.profissional || 'Profissional não informado', item.local || 'Unidade não informada'); } }); } else if (tipo === 'ambos') { let examesHtml = '', consultasHtml = ''; if (grupo.exames) for (let item of grupo.exames) examesHtml += `<div class="item-exame"><strong>🧪 ${escapeHtml(item.procedimento || 'Procedimento')}</strong><br>🕒 ${escapeHtml(item.hora)} | 📍 ${escapeHtml(item.unidade)} | 👨‍⚕️ ${escapeHtml(item.medico)}</div>`; if (grupo.consultas) for (let item of grupo.consultas) consultasHtml += `<div class="item-consulta"><strong>🩺 ${escapeHtml(item.subespecialidade || 'Especialidade')}</strong><br>🕒 ${escapeHtml(item.hora)} | 📍 ${escapeHtml(item.local)} | 👨‍⚕️ ${escapeHtml(item.profissional)}</div>`; card.innerHTML = `<div class="patient-header"><div><span class="patient-name">${escapeHtml(grupo.beneficiario)}</span> (${escapeHtml(grupo.matricula)})</div><div><strong>Data:</strong> ${dataFormatada}</div><div><button class="btn btn-primary btn-gerar-ambos">📄 Gerar ambos os formulários</button></div></div><div class="nasc-acomp"><div><label>📅 Nascimento:</label> <input type="date" class="nasc-date-ambos" value="${escapeHtml(nascimentoAtual)}"></div><div><label>👥 Acompanhante:</label> <select class="acomp-select-ambos"><option value="Não" ${grupo.acompanhante==='Não'?'selected':''}>Não</option><option value="Sim" ${grupo.acompanhante==='Sim'?'selected':''}>Sim</option></select></div></div><div class="patient-details">${examesHtml ? `<div><strong>📋 Exames (${grupo.exames.length}):</strong><div class="event-list">${examesHtml}</div></div>` : ''}${consultasHtml ? `<div style="margin-top:8px;"><strong>🩺 Consultas (${grupo.consultas.length}):</strong><div class="event-list">${consultasHtml}</div></div>` : ''}</div>`; const nascInput = card.querySelector('.nasc-date-ambos'); const acompSelect = card.querySelector('.acomp-select-ambos'); const btn = card.querySelector('.btn-gerar-ambos'); nascInput.addEventListener('change', () => grupo.nascimento = nascInput.value); acompSelect.addEventListener('change', () => grupo.acompanhante = acompSelect.value); btn.addEventListener('click', async () => { const grupoExame = { ...grupo, itens: grupo.exames }; const grupoConsulta = { ...grupo, itens: grupo.consultas }; await gerarFichaExamesAgendados(grupoExame); await gerarFichaConsultaAgendada(grupoConsulta); for (let item of grupo.exames) { registrarGeracao('Exame', grupoExame, grupo.data, item.procedimento, item.hora, item.medico, item.unidade); } for (let item of grupo.consultas) { registrarGeracao('Consulta', grupoConsulta, grupo.data, item.subespecialidade, item.hora, item.profissional, item.local); } log(`✅ Gerados ambos formulários para ${grupo.beneficiario} - ${dataFormatada}`); }); } container.appendChild(card); } } catch(err) { showError(`Erro ao renderizar lista ${tipo}: ${err.message}`); } }
-    async function htmlToPdf(htmlContent, filename, customSize = null) { const wrapper = document.createElement('div'); wrapper.style.position = 'absolute'; wrapper.style.left = '-9999px'; wrapper.style.top = '-9999px'; wrapper.innerHTML = htmlContent; document.body.appendChild(wrapper); await new Promise(r => setTimeout(r, 300)); const canvas = await html2canvas(wrapper, { scale: 2, backgroundColor: '#fff', logging: false }); document.body.removeChild(wrapper); const { jsPDF } = window.jspdf; let pdf = customSize ? new jsPDF({ orientation: 'portrait', unit: 'mm', format: customSize }) : new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' }); const imgWidth = pdf.internal.pageSize.getWidth(); const imgHeight = (canvas.height * imgWidth) / canvas.width; pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight); return pdf.output('blob'); }
-    function gerarQRCodeDataURL(texto, tamanho=80) { const div = document.createElement('div'); new QRCode(div, { text: texto, width: tamanho, height: tamanho }); const canvas = div.querySelector('canvas'); return canvas ? canvas.toDataURL() : ''; }
-    function montarRodape(local) { const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 80); const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 80); const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 80); return `<div style="background: #f0f4f8; padding: 5mm; margin-top: 8mm; border-top: 1px solid #ccc; font-size: 10px; line-height: 1.2; width: 100%;"><div><strong>Local de realização:</strong> ${escapeHtml(local)}<br>Praça dos Omaguás, 34 - Pinheiros - São Paulo - SP</div><div style="margin: 4px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304 | Site: www.preventsenior.com.br</div><div><strong>RESULTADOS PELA INTERNET</strong></div><div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;"><div style="flex:1;">Acesse pelo Portal do Beneficiário em nosso site ou via APP Prevent Senior. Tudo digital e muito prático para você! <strong>Acesse via QR CODE</strong><br>Médicos da rede própria Prevent Senior têm acesso aos resultados via prontuário eletrônico.</div><div style="display: flex; gap: 10px; margin-left: 8px;"><div style="text-align:center;"><img src="${qrPortal}" width="60" height="60"><br><span style="font-size:8px;">Portal</span></div><div style="text-align:center;"><img src="${qrApple}" width="60" height="60"><br><span style="font-size:8px;">Apple</span></div><div style="text-align:center;"><img src="${qrPlay}" width="60" height="60"><br><span style="font-size:8px;">Play</span></div></div></div></div>`; }
-    async function gerarFichaExamesAgendados(grupo) { const html = montarHTMLExameAgendado(grupo); const pdfBlob = await htmlToPdf(html, `Formulario_Exames_${grupo.matricula}_${grupo.data}.pdf`); saveAs(pdfBlob, `Formulario_Exames_${grupo.matricula}_${grupo.data}.pdf`); const etiquetaHtml = montarEtiqueta(grupo); const etiqBlob = await htmlToPdf(etiquetaHtml, `Etiqueta_${grupo.matricula}_${grupo.data}.pdf`, [90, 36]); saveAs(etiqBlob, `Etiqueta_${grupo.matricula}_${grupo.data}.pdf`); log(`✅ Gerado: exames agendados para ${grupo.beneficiario}`); }
-    async function gerarFichaConsultaAgendada(grupo) { const html = montarHTMLConsultaAgendada(grupo); const pdfBlob = await htmlToPdf(html, `Formulario_Consulta_${grupo.matricula}_${grupo.data}.pdf`); saveAs(pdfBlob, `Formulario_Consulta_${grupo.matricula}_${grupo.data}.pdf`); log(`✅ Gerado: consulta agendada para ${grupo.beneficiario}`); }
-    function montarHTMLExameAgendado(grupo) { const dataFormat = grupo.data.split('-').reverse().join('/'); const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________'; const itensHtml = grupo.itens.map(ex => `<li style="margin-bottom: 6px; font-size: 12px;"><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento || 'N/A')}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | <strong>Sala:</strong> ${escapeHtml(ex.andarSala)}<br><strong>Médico:</strong> ${escapeHtml(ex.medico || 'Não informado')} | <strong>Horário:</strong> ${ex.hora}</li>`).join(''); const unidadeLocal = grupo.itens[0]?.unidade || 'Unidade não informada'; return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES AGENDADOS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data de Nascimento:</strong> ${nasc}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data Agendada:</strong> ${dataFormat}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Exames / Procedimentos</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul></div>${montarRodape(unidadeLocal)}</div>`; }
-    function montarHTMLConsultaAgendada(grupo) { const dataFormat = grupo.data.split('-').reverse().join('/'); const itensHtml = grupo.itens.map(cons => `<li style="margin-bottom: 6px; font-size: 12px;"><strong>Horário:</strong> ${cons.hora || 'Horário não informado'} | <strong>Local:</strong> ${escapeHtml(cons.local)}<br><strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Subespecialidade:</strong> ${escapeHtml(cons.subespecialidade)}</li>`).join(''); const localConsulta = grupo.itens[0]?.local || 'Unidade não informada'; const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>'; function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; } return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS AGENDADAS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data da Consulta:</strong> ${dataFormat}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">🩺 Dados da Consulta</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Anamnese</h3><div style="font-size: 12px; line-height: 1.4;"><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(localConsulta)}</div>`; }
-    function gerarLivreDemanda() { const mat = document.getElementById('manualMatricula').value.trim(); const nome = document.getElementById('manualNome').value.trim(); const nasc = document.getElementById('manualNascimento').value; const acomp = document.getElementById('manualAcompanhante').value; const data = document.getElementById('manualData').value; const hora = document.getElementById('manualHora').value; const proc = document.getElementById('manualProcedimento').value; const unidade = document.getElementById('manualLocal').value; const sala = document.getElementById('manualSala').value.trim(); const profissional = document.getElementById('manualProfissional').value; const obs = document.getElementById('manualObs').value; if (!mat || !nome || !nasc || !data || !hora) { alert('Preencha todos os campos obrigatórios'); return; } const grupo = { matricula: mat, beneficiario: nome, data: data, nascimento: nasc, acompanhante: acomp, itens: [{ procedimento: proc, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }] }; gerarFichaLivreDemanda(grupo); registrarGeracao('Exame (Livre Demanda)', grupo, data, proc, hora, profissional, unidade); }
-    async function gerarFichaLivreDemanda(grupo) { const html = montarHTMLLivreDemanda(grupo); const pdfBlob = await htmlToPdf(html, `Formulario_LivreDemanda_${grupo.matricula}_${grupo.data}.pdf`); saveAs(pdfBlob, `Formulario_LivreDemanda_${grupo.matricula}_${grupo.data}.pdf`); const etiquetaHtml = montarEtiqueta(grupo); const etiqBlob = await htmlToPdf(etiquetaHtml, `Etiqueta_Livre_${grupo.matricula}_${grupo.data}.pdf`, [90, 36]); saveAs(etiqBlob, `Etiqueta_Livre_${grupo.matricula}_${grupo.data}.pdf`); log(`✅ Gerado: Livre Demanda para ${grupo.beneficiario}`); }
-    function montarHTMLLivreDemanda(grupo) { const dataFormat = grupo.data.split('-').reverse().join('/'); const nasc = grupo.nascimento.split('-').reverse().join('/'); const ex = grupo.itens[0]; return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - LIVRE DEMANDA</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div><hr><h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3><p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br><strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}</div>${montarRodape(ex.unidade)}</div>`; }
-    function gerarEncaixe() { const mat = document.getElementById('encaixeMatricula').value.trim(); const nome = document.getElementById('encaixeNome').value.trim(); const nasc = document.getElementById('encaixeNascimento').value; const acomp = document.getElementById('encaixeAcompanhante').value; const data = document.getElementById('encaixeData').value; const hora = document.getElementById('encaixeHora').value; const tipo = document.getElementById('encaixeTipo').value; const procedimentoEspec = document.getElementById('encaixeProcedimento').value.trim(); const unidade = document.getElementById('encaixeLocal').value; const sala = document.getElementById('encaixeSala').value.trim(); const profissional = document.getElementById('encaixeProfissional').value; const obs = document.getElementById('encaixeObs').value; if (!mat || !nome || !nasc || !data || !hora || !procedimentoEspec) { alert('Preencha todos os campos obrigatórios'); return; } const grupo = { matricula: mat, beneficiario: nome, data: data, nascimento: nasc, acompanhante: acomp, itens: tipo === 'exame' ? [{ procedimento: procedimentoEspec, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }] : [{ subespecialidade: procedimentoEspec, hora: hora, local: unidade, profissional: profissional, obs: obs }] }; if (tipo === 'exame') { gerarFichaEncaixeExame(grupo); registrarGeracao('Exame (Encaixe)', grupo, data, procedimentoEspec, hora, profissional, unidade); } else { gerarFichaEncaixeConsulta(grupo); registrarGeracao('Consulta (Encaixe)', grupo, data, procedimentoEspec, hora, profissional, unidade); } }
-    async function gerarFichaEncaixeExame(grupo) { const html = montarHTMLEncaixeExame(grupo); const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Exame_${grupo.matricula}_${grupo.data}.pdf`); saveAs(pdfBlob, `Formulario_Encaixe_Exame_${grupo.matricula}_${grupo.data}.pdf`); log(`✅ Gerado: Encaixe Exame para ${grupo.beneficiario}`); }
-    async function gerarFichaEncaixeConsulta(grupo) { const html = montarHTMLEncaixeConsulta(grupo); const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Consulta_${grupo.matricula}_${grupo.data}.pdf`); saveAs(pdfBlob, `Formulario_Encaixe_Consulta_${grupo.matricula}_${grupo.data}.pdf`); log(`✅ Gerado: Encaixe Consulta para ${grupo.beneficiario}`); }
-    function montarHTMLEncaixeExame(grupo) { const dataFormat = grupo.data.split('-').reverse().join('/'); const nasc = grupo.nascimento.split('-').reverse().join('/'); const ex = grupo.itens[0]; return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - ENCAIXE</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div><hr><h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3><p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br><strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}</div>${montarRodape(ex.unidade)}</div>`; }
-    function montarHTMLEncaixeConsulta(grupo) { const dataFormat = grupo.data.split('-').reverse().join('/'); const cons = grupo.itens[0]; const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>'; function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; } return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS - ENCAIXE</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${cons.hora}</div><div><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Especialidade:</strong> ${escapeHtml(cons.subespecialidade)}</div>${cons.obs ? `<div><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}<hr><h3 style="font-size: 14px; font-weight: bold;">📋 Anamnese</h3><div><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(cons.local)}</div>`; }
-    function montarEtiqueta(grupo) { const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________'; return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 90mm; height: 36mm; padding: 4mm; text-align: center; border: 1px dashed #000; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;"><div style="font-size: 18px; font-weight: bold; margin-bottom: 2mm;">${escapeHtml(grupo.beneficiario)}</div><div style="font-size: 14px; font-weight: bold;">Matrícula: ${escapeHtml(grupo.matricula)}</div><div style="font-size: 14px; font-weight: bold;">Nascimento: ${nasc}</div></div>`; }
 
+    // ==================== CARREGAR PLANILHAS ====================
+    async function carregarExames() {
+        const file = fileExames.files[0];
+        if (!file) { alert('Selecione o arquivo de exames'); return; }
+        document.getElementById('infoExames').innerText = file.name;
+        try {
+            const { header, rows } = await lerPlanilha(file);
+            log('Cabeçalhos encontrados (exames): ' + header.join(', '));
+            const findIndex = (patterns) => {
+                for (let i = 0; i < header.length; i++) {
+                    let col = header[i].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    for (let p of patterns) if (col.includes(p)) return i;
+                }
+                return -1;
+            };
+            const idx = {
+                data: findIndex(['data agendada', 'dataagendada', 'data', 'dt']),
+                hora: findIndex(['hora agendada', 'horaagendada', 'hora', 'horario']),
+                matricula: findIndex(['matricula', 'matrícula', 'matr']),
+                beneficiario: findIndex(['beneficiario', 'beneficiário', 'nome', 'paciente']),
+                procedimento: findIndex(['procedimento', 'exame']),
+                unidade: findIndex(['unidade', 'local']),
+                andarSala: findIndex(['andar/sala', 'andar', 'sala']),
+                medico: findIndex(['nome médico', 'nome medico', 'médico', 'medico']),
+                status: findIndex(['status', 'situacao'])
+            };
+            if (idx.matricula === -1 || idx.beneficiario === -1) throw new Error('Colunas Matricula/Beneficiario não encontradas');
+            examesRaw = [];
+            for (let row of rows) {
+                if (!row || row.every(c => !c)) continue;
+                let status = (idx.status !== -1 ? normalizar(row[idx.status] || '') : '').toUpperCase();
+                if (status && status !== 'ATIVADO' && status !== 'ATIVO') continue;
+                examesRaw.push({
+                    data: parseData(row[idx.data]),
+                    hora: parseHora(row[idx.hora]),
+                    matricula: normalizar(row[idx.matricula] || ''),
+                    beneficiario: normalizar(row[idx.beneficiario] || ''),
+                    procedimento: normalizar(row[idx.procedimento] || ''),
+                    unidade: normalizar(row[idx.unidade] || ''),
+                    andarSala: normalizar(row[idx.andarSala] || ''),
+                    medico: normalizar(row[idx.medico] || '')
+                });
+            }
+            log(`Exames carregados: ${examesRaw.length} registros ativos`);
+            agruparExames();
+            renderizarLista('exames');
+            renderizarLista('ambos');
+        } catch (err) { alert('Erro: '+err.message); showError(err.message); }
+    }
+    function agruparExames() { groupedExames.clear(); for (let ex of examesRaw) { if (!ex.matricula || !ex.data) continue; let key = `${ex.matricula}|${ex.data}`; if (!groupedExames.has(key)) { groupedExames.set(key, { matricula: ex.matricula, beneficiario: ex.beneficiario, data: ex.data, itens: [], nascimento: '', acompanhante: 'Não' }); } groupedExames.get(key).itens.push(ex); } log(`Agrupados ${groupedExames.size} pacientes/dia para exames`); }
+    async function carregarConsultas() {
+        const file = fileConsultas.files[0];
+        if (!file) { alert('Selecione o arquivo de consultas'); return; }
+        document.getElementById('infoConsultas').innerText = file.name;
+        try {
+            const { header, rows } = await lerPlanilha(file);
+            log('Cabeçalhos encontrados (consultas): ' + header.join(', '));
+            const idx = {
+                local: header.findIndex(h => /local/i.test(h)),
+                profissional: header.findIndex(h => /profissional/i.test(h)),
+                dataConsulta: header.findIndex(h => /data consulta/i.test(h) || /data da consulta/i.test(h) || /dt consulta/i.test(h)),
+                hora: header.findIndex(h => /hora consulta/i.test(h) || /hora da consulta/i.test(h) || /horario consulta/i.test(h)),
+                beneficiario: header.findIndex(h => /beneficiario/i.test(h)),
+                matricula: header.findIndex(h => /matricula/i.test(h)),
+                subespecialidade: header.findIndex(h => /subespecialidade/i.test(h)),
+                status: header.findIndex(h => /status/i.test(h))
+            };
+            if (idx.matricula === -1 || idx.beneficiario === -1) throw new Error('Colunas MATRICULA e/ou BENEFICIARIO não encontradas');
+            consultasRaw = [];
+            for (let row of rows) {
+                if (!row || row.every(c => !c)) continue;
+                const consulta = {
+                    data: parseData(row[idx.dataConsulta]),
+                    hora: parseHora(row[idx.hora]),
+                    matricula: normalizar(row[idx.matricula] || ''),
+                    beneficiario: normalizar(row[idx.beneficiario] || ''),
+                    local: normalizar(row[idx.local] || ''),
+                    profissional: normalizar(row[idx.profissional] || ''),
+                    subespecialidade: normalizar(row[idx.subespecialidade] || '')
+                };
+                if (consulta.matricula && consulta.beneficiario && consulta.data) consultasRaw.push(consulta);
+            }
+            log(`Consultas carregadas: ${consultasRaw.length} registros ativos`);
+            agruparConsultas();
+            renderizarLista('consultas');
+            renderizarLista('ambos');
+        } catch (err) { alert('Erro consultas: ' + err.message); showError(err.message); }
+    }
+    function agruparConsultas() { groupedConsultas.clear(); for (let c of consultasRaw) { if (!c.matricula || !c.data) continue; let key = `${c.matricula}|${c.data}`; if (!groupedConsultas.has(key)) { groupedConsultas.set(key, { matricula: c.matricula, beneficiario: c.beneficiario, data: c.data, itens: [], nascimento: '', acompanhante: 'Não' }); } groupedConsultas.get(key).itens.push(c); } log(`Agrupados ${groupedConsultas.size} pacientes/dia para consultas`); }
+
+    function escapeHtml(str) { if (str === undefined || str === null) return ''; const s = String(str); return s.replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+
+    // ==================== REGISTRO COM NOME DO USUÁRIO ====================
+    function registrarGeracao(tipo, paciente, dataAtendimento, procedimentoEspecialidade, horario, profissional, unidadeLocal) {
+        const now = new Date();
+        const dataHoraGeracao = now.toLocaleString('pt-BR');
+        const nomeUsuario = document.getElementById('nomeUsuario').value.trim() || 'Não informado';
+        historicoGeracoes.push({
+            dataHoraGeracao: dataHoraGeracao,
+            nomePaciente: paciente.beneficiario,
+            matricula: paciente.matricula,
+            dataAtendimento: dataAtendimento.split('-').reverse().join('/'),
+            tipo: tipo,
+            procedimentoEspecialidade: procedimentoEspecialidade,
+            horario: horario,
+            profissional: profissional,
+            unidadeLocal: unidadeLocal,
+            usuario: nomeUsuario
+        });
+        log(`📝 Registrado: ${tipo} - ${paciente.beneficiario} - ${dataAtendimento} (Usuário: ${nomeUsuario})`);
+    }
+
+    // ==================== EXPORTAR RELATÓRIO COM NOME DO USUÁRIO ====================
+    function exportarRelatorioExcel() {
+        if (historicoGeracoes.length === 0) {
+            alert('Nenhum atendimento gerado ainda. Gere formulários para que o relatório seja preenchido.');
+            return;
+        }
+        const dados = historicoGeracoes.map(reg => ({
+            'Data/Hora da Geração': reg.dataHoraGeracao,
+            'Usuário que Gerou': reg.usuario || 'Não informado',
+            'Nome do Paciente': reg.nomePaciente,
+            'Matrícula': reg.matricula,
+            'Data do Atendimento': reg.dataAtendimento,
+            'Tipo': reg.tipo,
+            'Procedimento / Especialidade': reg.procedimentoEspecialidade,
+            'Horário': reg.horario,
+            'Profissional / Médico': reg.profissional,
+            'Unidade / Local': reg.unidadeLocal
+        }));
+        const ws = XLSX.utils.json_to_sheet(dados);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Atendimentos');
+        const now = new Date();
+        const timestamp = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}_${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}${now.getSeconds().toString().padStart(2,'0')}`;
+        XLSX.writeFile(wb, `relatorio_atendimentos_${timestamp}.xlsx`);
+        log(`📊 Relatório exportado com ${historicoGeracoes.length} registros.`);
+        alert(`✅ Relatório exportado com sucesso! ${historicoGeracoes.length} atendimentos registrados.`);
+    }
+
+    // ==================== RENDERIZAR LISTAS (adaptado para usar nome do usuário) ====================
+    function renderizarLista(tipo) {
+        try {
+            const searchTerm = searchInput.value.toLowerCase();
+            let grupos = [];
+            let container;
+            if (tipo === 'exames') {
+                grupos = Array.from(groupedExames.values());
+                container = listaExamesDiv;
+            } else if (tipo === 'consultas') {
+                grupos = Array.from(groupedConsultas.values());
+                container = listaConsultasDiv;
+            } else if (tipo === 'ambos') {
+                const ambosMap = new Map();
+                for (let [key, grupoExame] of groupedExames.entries()) {
+                    if (groupedConsultas.has(key)) {
+                        const grupoConsulta = groupedConsultas.get(key);
+                        ambosMap.set(key, {
+                            matricula: grupoExame.matricula,
+                            beneficiario: grupoExame.beneficiario,
+                            data: grupoExame.data,
+                            exames: grupoExame.itens,
+                            consultas: grupoConsulta.itens,
+                            nascimento: grupoExame.nascimento || grupoConsulta.nascimento || '',
+                            acompanhante: grupoExame.acompanhante || 'Não'
+                        });
+                    }
+                }
+                grupos = Array.from(ambosMap.values());
+                container = listaAmbosDiv;
+            } else return;
+            if (!container) return;
+            if (grupos.length === 0) { container.innerHTML = '<div style="padding:20px; text-align:center;">Nenhum dado encontrado.</div>'; return; }
+            grupos = grupos.filter(g => g.beneficiario.toLowerCase().includes(searchTerm) || g.matricula.includes(searchTerm));
+            if (grupos.length === 0) { container.innerHTML = '<div style="padding:20px; text-align:center;">Nenhum paciente encontrado.</div>'; return; }
+            container.innerHTML = '';
+            for (let grupo of grupos) {
+                const card = document.createElement('div');
+                card.className = 'patient-card';
+                const dataFormatada = grupo.data.split('-').reverse().join('/');
+                const nascimentoAtual = grupo.nascimento || '';
+                if (tipo === 'exames') {
+                    let itensHtml = '';
+                    for (let item of grupo.itens) {
+                        itensHtml += `<div class="item-exame"><strong>🧪 ${escapeHtml(item.procedimento || 'Procedimento não informado')}</strong><br>🕒 ${escapeHtml(item.hora || 'Horário não informado')} | 📍 ${escapeHtml(item.unidade)} ${item.andarSala ? '- Sala '+escapeHtml(item.andarSala) : ''}<br>👨‍⚕️ Profissional: ${escapeHtml(item.medico || 'Não informado')}</div>`;
+                    }
+                    card.innerHTML = `<div class="patient-header"><div><span class="patient-name">${escapeHtml(grupo.beneficiario)}</span> (${escapeHtml(grupo.matricula)})</div><div><strong>Data:</strong> ${dataFormatada}</div><div><button class="btn btn-primary btn-gerar">📄 Gerar Formulário + Etiqueta</button></div></div><div class="nasc-acomp"><div><label>📅 Nascimento:</label> <input type="date" class="nasc-date" value="${escapeHtml(nascimentoAtual)}"></div><div><label>👥 Acompanhante:</label> <select class="acomp-select"><option value="Não" ${grupo.acompanhante==='Não'?'selected':''}>Não</option><option value="Sim" ${grupo.acompanhante==='Sim'?'selected':''}>Sim</option></select></div></div><div class="patient-details"><strong>📋 Itens (${grupo.itens.length}):</strong><div class="event-list">${itensHtml}</div></div>`;
+                    const nascInput = card.querySelector('.nasc-date');
+                    const acompSelect = card.querySelector('.acomp-select');
+                    const btn = card.querySelector('.btn-gerar');
+                    nascInput.addEventListener('change', () => grupo.nascimento = nascInput.value);
+                    acompSelect.addEventListener('change', () => grupo.acompanhante = acompSelect.value);
+                    btn.addEventListener('click', async () => {
+                        // Valida se o nome do usuário foi preenchido
+                        const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
+                        if (!nomeUsuario) {
+                            alert('⚠️ Por favor, preencha o campo "Nome do Usuário" antes de gerar um formulário.');
+                            return;
+                        }
+                        await gerarFichaExamesAgendados(grupo);
+                        for (let item of grupo.itens) {
+                            registrarGeracao('Exame', grupo, grupo.data, item.procedimento || 'Procedimento', item.hora || 'Horário não informado', item.medico || 'Profissional não informado', item.unidade || 'Unidade não informada');
+                        }
+                    });
+                } else if (tipo === 'consultas') {
+                    let itensHtml = '';
+                    for (let item of grupo.itens) {
+                        itensHtml += `<div class="item-consulta"><strong>🩺 ${escapeHtml(item.subespecialidade || 'Especialidade não informada')}</strong><br>🕒 ${escapeHtml(item.hora || 'Horário não informado')} | 📍 ${escapeHtml(item.local)}<br>👨‍⚕️ Profissional: ${escapeHtml(item.profissional || 'Não informado')}</div>`;
+                    }
+                    card.innerHTML = `<div class="patient-header"><div><span class="patient-name">${escapeHtml(grupo.beneficiario)}</span> (${escapeHtml(grupo.matricula)})</div><div><strong>Data:</strong> ${dataFormatada}</div><div><button class="btn btn-primary btn-gerar">📄 Gerar Formulário</button></div></div><div class="nasc-acomp"><div><label>📅 Nascimento:</label> <input type="date" class="nasc-date" value="${escapeHtml(nascimentoAtual)}"></div><div><label>👥 Acompanhante:</label> <select class="acomp-select"><option value="Não" ${grupo.acompanhante==='Não'?'selected':''}>Não</option><option value="Sim" ${grupo.acompanhante==='Sim'?'selected':''}>Sim</option></select></div></div><div class="patient-details"><strong>📋 Itens (${grupo.itens.length}):</strong><div class="event-list">${itensHtml}</div></div>`;
+                    const nascInput = card.querySelector('.nasc-date');
+                    const acompSelect = card.querySelector('.acomp-select');
+                    const btn = card.querySelector('.btn-gerar');
+                    nascInput.addEventListener('change', () => grupo.nascimento = nascInput.value);
+                    acompSelect.addEventListener('change', () => grupo.acompanhante = acompSelect.value);
+                    btn.addEventListener('click', async () => {
+                        const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
+                        if (!nomeUsuario) {
+                            alert('⚠️ Por favor, preencha o campo "Nome do Usuário" antes de gerar um formulário.');
+                            return;
+                        }
+                        await gerarFichaConsultaAgendada(grupo);
+                        for (let item of grupo.itens) {
+                            registrarGeracao('Consulta', grupo, grupo.data, item.subespecialidade || 'Especialidade', item.hora || 'Horário não informado', item.profissional || 'Profissional não informado', item.local || 'Unidade não informada');
+                        }
+                    });
+                } else if (tipo === 'ambos') {
+                    let examesHtml = '', consultasHtml = '';
+                    if (grupo.exames) for (let item of grupo.exames) examesHtml += `<div class="item-exame"><strong>🧪 ${escapeHtml(item.procedimento || 'Procedimento')}</strong><br>🕒 ${escapeHtml(item.hora)} | 📍 ${escapeHtml(item.unidade)} | 👨‍⚕️ ${escapeHtml(item.medico)}</div>`;
+                    if (grupo.consultas) for (let item of grupo.consultas) consultasHtml += `<div class="item-consulta"><strong>🩺 ${escapeHtml(item.subespecialidade || 'Especialidade')}</strong><br>🕒 ${escapeHtml(item.hora)} | 📍 ${escapeHtml(item.local)} | 👨‍⚕️ ${escapeHtml(item.profissional)}</div>`;
+                    card.innerHTML = `<div class="patient-header"><div><span class="patient-name">${escapeHtml(grupo.beneficiario)}</span> (${escapeHtml(grupo.matricula)})</div><div><strong>Data:</strong> ${dataFormatada}</div><div><button class="btn btn-primary btn-gerar-ambos">📄 Gerar ambos os formulários</button></div></div><div class="nasc-acomp"><div><label>📅 Nascimento:</label> <input type="date" class="nasc-date-ambos" value="${escapeHtml(nascimentoAtual)}"></div><div><label>👥 Acompanhante:</label> <select class="acomp-select-ambos"><option value="Não" ${grupo.acompanhante==='Não'?'selected':''}>Não</option><option value="Sim" ${grupo.acompanhante==='Sim'?'selected':''}>Sim</option></select></div></div><div class="patient-details">${examesHtml ? `<div><strong>📋 Exames (${grupo.exames.length}):</strong><div class="event-list">${examesHtml}</div></div>` : ''}${consultasHtml ? `<div style="margin-top:8px;"><strong>🩺 Consultas (${grupo.consultas.length}):</strong><div class="event-list">${consultasHtml}</div></div>` : ''}</div>`;
+                    const nascInput = card.querySelector('.nasc-date-ambos');
+                    const acompSelect = card.querySelector('.acomp-select-ambos');
+                    const btn = card.querySelector('.btn-gerar-ambos');
+                    nascInput.addEventListener('change', () => grupo.nascimento = nascInput.value);
+                    acompSelect.addEventListener('change', () => grupo.acompanhante = acompSelect.value);
+                    btn.addEventListener('click', async () => {
+                        const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
+                        if (!nomeUsuario) {
+                            alert('⚠️ Por favor, preencha o campo "Nome do Usuário" antes de gerar um formulário.');
+                            return;
+                        }
+                        const grupoExame = { ...grupo, itens: grupo.exames };
+                        const grupoConsulta = { ...grupo, itens: grupo.consultas };
+                        await gerarFichaExamesAgendados(grupoExame);
+                        await gerarFichaConsultaAgendada(grupoConsulta);
+                        for (let item of grupo.exames) {
+                            registrarGeracao('Exame', grupoExame, grupo.data, item.procedimento, item.hora, item.medico, item.unidade);
+                        }
+                        for (let item of grupo.consultas) {
+                            registrarGeracao('Consulta', grupoConsulta, grupo.data, item.subespecialidade, item.hora, item.profissional, item.local);
+                        }
+                        log(`✅ Gerados ambos formulários para ${grupo.beneficiario} - ${dataFormatada}`);
+                    });
+                }
+                container.appendChild(card);
+            }
+        } catch(err) { showError(`Erro ao renderizar lista ${tipo}: ${err.message}`); }
+    }
+
+    // ==================== GERAR PDF ====================
+    async function htmlToPdf(htmlContent, filename, customSize = null) {
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'absolute';
+        wrapper.style.left = '-9999px';
+        wrapper.style.top = '-9999px';
+        wrapper.innerHTML = htmlContent;
+        document.body.appendChild(wrapper);
+        await new Promise(r => setTimeout(r, 300));
+        const canvas = await html2canvas(wrapper, { scale: 2, backgroundColor: '#fff', logging: false });
+        document.body.removeChild(wrapper);
+        const { jsPDF } = window.jspdf;
+        let pdf = customSize ? new jsPDF({ orientation: 'portrait', unit: 'mm', format: customSize }) : new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, imgWidth, imgHeight);
+        return pdf.output('blob');
+    }
+
+    function gerarQRCodeDataURL(texto, tamanho=80) {
+        const div = document.createElement('div');
+        new QRCode(div, { text: texto, width: tamanho, height: tamanho });
+        const canvas = div.querySelector('canvas');
+        return canvas ? canvas.toDataURL() : '';
+    }
+
+    // ==================== MAPEAMENTO DE ENDEREÇOS ====================
+    const enderecosUnidades = {
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Alemanha": "Alameda Santos, 960 - Cerqueira César - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Barcelona": "Rua Lourenço Marques, 158 - Vila Olímpia - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Reabilitação Prevent Senior Los Angeles": "Rua Clodomiro Amazonas, 150 - Vila Nova Conceição - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo Amaro": "Av. João Dias, 257 - Santo Amaro - São Paulo - SP",
+        "Núcleo de Medicina Avançada Prevent Senior Ibirapuera": "Av. Ibirapuera, 780 - Indianópolis - São Paulo - SP",
+        "Núcleo de Medicina Avançada Prevent Senior Jardim São Paulo": "Av. Leôncio de Magalhães, 885 - Jardim São Paulo - São Paulo - SP",
+        "Núcleo de Medicina Avançada Prevent Senior Bela Vista": "Rua São Carlos do Pinhal, 60 - Bela Vista - São Paulo - SP",
+        "Núcleo de Medicina Avançada Prevent Senior Madrid": "Rua Vergueiro, 17 - Liberdade - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Santo André": "Av. Atlântica, 195 - Vila Valparaíso - Santo André - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Londres": "Praça dos Omaguás, 34 - Pinheiros - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Florença": "Rua José Oscar Abreu Sampaio, 368 - Jardim Anália Franco - São Paulo - SP",
+        "Prevent Senior Medicina Diagnóstica Mooca": "Av. Paes de Barros, 3428 - Parque da Mooca - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Brasil": "Av. Brigadeiro Luís Antônio, 3521 - Jardim Paulista - São Paulo - SP",
+        "Núcleo de Medicina Diagnóstica por Imagem Tatuapé": "Rua Padre Estevão Pernet, 551 - Vila Gomes Cardim - São Paulo - SP",
+        "Núcleo de Oftalmologia Prevent Senior Jardim Paulista": "Alameda Campinas, 529 - Jardim Paulista - São Paulo - SP",
+        "Núcleo de Oncologia e Hematologia Prevent Senior Vila Mariana": "Rua Vergueiro, 1695 - Vila Mariana - São Paulo - SP",
+        "Prevent Senior Medicina Diagnóstica Jardim Paulista": "Av. Brigadeiro Luís Antônio, 4677 - Jardim Paulista - São Paulo - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Cascais": "Alameda Armênio Mendes, 66 - 5º andar - Conj. 501 a 516 - Aparecida - Santos - SP",
+        "Núcleo de Medicina Avançada Prevent Senior Santos": "Rua Jorge Tibiriçá, 5 - Gonzaga - Santos - SP",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Malibu": "Av. Pastor Martin Luther King Jr, 126 - Ed. Corporate - Lâmina B - 7º andar - Shopping Nova America - Del Castilho - Rio de Janeiro - RJ",
+        "Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Taiti": "Av. Armando Lombardi, 800 - Barra da Tijuca - Rio de Janeiro - RJ",
+        "Núcleo de Medicina Avançada Prevent Senior Rio Sul": "Rua Lauro Müller, 116 - Salas 1302 a 1304 - Botafogo - Rio de Janeiro - RJ"
+    };
+
+    function obterEnderecoUnidade(nomeUnidade) {
+        const chave = nomeUnidade.trim();
+        if (enderecosUnidades[chave]) return enderecosUnidades[chave];
+        return "Praça dos Omaguás, 34 - Pinheiros - São Paulo - SP";
+    }
+
+    function montarRodape(unidade) {
+        const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 80);
+        const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 80);
+        const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 80);
+        const endereco = obterEnderecoUnidade(unidade);
+        return `<div style="background: #f0f4f8; padding: 5mm; margin-top: 8mm; border-top: 1px solid #ccc; font-size: 10px; line-height: 1.2; width: 100%;">
+                    <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}<br>${escapeHtml(endereco)}</div>
+                    <div style="margin: 4px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304 | Site: www.preventsenior.com.br</div>
+                    <div><strong>RESULTADOS PELA INTERNET</strong></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div style="flex:1;">Acesse pelo Portal do Beneficiário em nosso site ou via APP Prevent Senior. Tudo digital e muito prático para você! <strong>Acesse via QR CODE</strong><br>Médicos da rede própria Prevent Senior têm acesso aos resultados via prontuário eletrônico.</div>
+                        <div style="display: flex; gap: 10px; margin-left: 8px;">
+                            <div style="text-align:center;"><img src="${qrPortal}" width="60" height="60"><br><span style="font-size:8px;">Portal</span></div>
+                            <div style="text-align:center;"><img src="${qrApple}" width="60" height="60"><br><span style="font-size:8px;">Apple</span></div>
+                            <div style="text-align:center;"><img src="${qrPlay}" width="60" height="60"><br><span style="font-size:8px;">Play</span></div>
+                        </div>
+                    </div>
+                </div>`;
+    }
+
+    // ==================== FICHAS ====================
+    async function gerarFichaExamesAgendados(grupo) {
+        const html = montarHTMLExameAgendado(grupo);
+        const pdfBlob = await htmlToPdf(html, `Formulario_Exames_${grupo.matricula}_${grupo.data}.pdf`);
+        saveAs(pdfBlob, `Formulario_Exames_${grupo.matricula}_${grupo.data}.pdf`);
+        const etiquetaHtml = montarEtiqueta(grupo);
+        const etiqBlob = await htmlToPdf(etiquetaHtml, `Etiqueta_${grupo.matricula}_${grupo.data}.pdf`, [90, 36]);
+        saveAs(etiqBlob, `Etiqueta_${grupo.matricula}_${grupo.data}.pdf`);
+        log(`✅ Gerado: exames agendados para ${grupo.beneficiario}`);
+    }
+    async function gerarFichaConsultaAgendada(grupo) {
+        const html = montarHTMLConsultaAgendada(grupo);
+        const pdfBlob = await htmlToPdf(html, `Formulario_Consulta_${grupo.matricula}_${grupo.data}.pdf`);
+        saveAs(pdfBlob, `Formulario_Consulta_${grupo.matricula}_${grupo.data}.pdf`);
+        log(`✅ Gerado: consulta agendada para ${grupo.beneficiario}`);
+    }
+
+    function montarHTMLExameAgendado(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________';
+        const itensHtml = grupo.itens.map(ex => `<li style="margin-bottom: 6px; font-size: 12px;"><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento || 'N/A')}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | <strong>Sala:</strong> ${escapeHtml(ex.andarSala)}<br><strong>Médico:</strong> ${escapeHtml(ex.medico || 'Não informado')} | <strong>Horário:</strong> ${ex.hora}</li>`).join('');
+        const unidadeLocal = grupo.itens[0]?.unidade || 'Unidade não informada';
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES AGENDADOS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data de Nascimento:</strong> ${nasc}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data Agendada:</strong> ${dataFormat}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Exames / Procedimentos</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul></div>${montarRodape(unidadeLocal)}</div>`;
+    }
+
+    function montarHTMLConsultaAgendada(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const itensHtml = grupo.itens.map(cons => `<li style="margin-bottom: 6px; font-size: 12px;"><strong>Horário:</strong> ${cons.hora || 'Horário não informado'} | <strong>Local:</strong> ${escapeHtml(cons.local)}<br><strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Subespecialidade:</strong> ${escapeHtml(cons.subespecialidade)}</li>`).join('');
+        const localConsulta = grupo.itens[0]?.local || 'Unidade não informada';
+        const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
+        function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS AGENDADAS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data da Consulta:</strong> ${dataFormat}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">🩺 Dados da Consulta</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Anamnese</h3><div style="font-size: 12px; line-height: 1.4;"><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(localConsulta)}</div>`;
+    }
+
+    // ==================== LIVRE DEMANDA E ENCAIXE ====================
+    function gerarLivreDemanda() {
+        const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
+        if (!nomeUsuario) {
+            alert('⚠️ Por favor, preencha o campo "Nome do Usuário" antes de gerar um formulário.');
+            return;
+        }
+        const mat = document.getElementById('manualMatricula').value.trim();
+        const nome = document.getElementById('manualNome').value.trim();
+        const nasc = document.getElementById('manualNascimento').value;
+        const acomp = document.getElementById('manualAcompanhante').value;
+        const data = document.getElementById('manualData').value;
+        const hora = document.getElementById('manualHora').value;
+        const proc = document.getElementById('manualProcedimento').value;
+        const unidade = document.getElementById('manualLocal').value;
+        const sala = document.getElementById('manualSala').value.trim();
+        const profissional = document.getElementById('manualProfissional').value;
+        const obs = document.getElementById('manualObs').value;
+        if (!mat || !nome || !nasc || !data || !hora) { alert('Preencha todos os campos obrigatórios'); return; }
+        const grupo = { matricula: mat, beneficiario: nome, data: data, nascimento: nasc, acompanhante: acomp, itens: [{ procedimento: proc, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }] };
+        gerarFichaLivreDemanda(grupo);
+        registrarGeracao('Exame (Livre Demanda)', grupo, data, proc, hora, profissional, unidade);
+    }
+    async function gerarFichaLivreDemanda(grupo) {
+        const html = montarHTMLLivreDemanda(grupo);
+        const pdfBlob = await htmlToPdf(html, `Formulario_LivreDemanda_${grupo.matricula}_${grupo.data}.pdf`);
+        saveAs(pdfBlob, `Formulario_LivreDemanda_${grupo.matricula}_${grupo.data}.pdf`);
+        const etiquetaHtml = montarEtiqueta(grupo);
+        const etiqBlob = await htmlToPdf(etiquetaHtml, `Etiqueta_Livre_${grupo.matricula}_${grupo.data}.pdf`, [90, 36]);
+        saveAs(etiqBlob, `Etiqueta_Livre_${grupo.matricula}_${grupo.data}.pdf`);
+        log(`✅ Gerado: Livre Demanda para ${grupo.beneficiario}`);
+    }
+    function montarHTMLLivreDemanda(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const nasc = grupo.nascimento.split('-').reverse().join('/');
+        const ex = grupo.itens[0];
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - LIVRE DEMANDA</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div><hr><h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3><p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br><strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}</div>${montarRodape(ex.unidade)}</div>`;
+    }
+
+    function gerarEncaixe() {
+        const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
+        if (!nomeUsuario) {
+            alert('⚠️ Por favor, preencha o campo "Nome do Usuário" antes de gerar um formulário.');
+            return;
+        }
+        const mat = document.getElementById('encaixeMatricula').value.trim();
+        const nome = document.getElementById('encaixeNome').value.trim();
+        const nasc = document.getElementById('encaixeNascimento').value;
+        const acomp = document.getElementById('encaixeAcompanhante').value;
+        const data = document.getElementById('encaixeData').value;
+        const hora = document.getElementById('encaixeHora').value;
+        const tipo = document.getElementById('encaixeTipo').value;
+        const procedimentoEspec = document.getElementById('encaixeProcedimento').value.trim();
+        const unidade = document.getElementById('encaixeLocal').value;
+        const sala = document.getElementById('encaixeSala').value.trim();
+        const profissional = document.getElementById('encaixeProfissional').value;
+        const obs = document.getElementById('encaixeObs').value;
+        if (!mat || !nome || !nasc || !data || !hora || !procedimentoEspec) { alert('Preencha todos os campos obrigatórios'); return; }
+        const grupo = { matricula: mat, beneficiario: nome, data: data, nascimento: nasc, acompanhante: acomp, itens: tipo === 'exame' ? [{ procedimento: procedimentoEspec, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }] : [{ subespecialidade: procedimentoEspec, hora: hora, local: unidade, profissional: profissional, obs: obs }] };
+        if (tipo === 'exame') {
+            gerarFichaEncaixeExame(grupo);
+            registrarGeracao('Exame (Encaixe)', grupo, data, procedimentoEspec, hora, profissional, unidade);
+        } else {
+            gerarFichaEncaixeConsulta(grupo);
+            registrarGeracao('Consulta (Encaixe)', grupo, data, procedimentoEspec, hora, profissional, unidade);
+        }
+    }
+    async function gerarFichaEncaixeExame(grupo) {
+        const html = montarHTMLEncaixeExame(grupo);
+        const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Exame_${grupo.matricula}_${grupo.data}.pdf`);
+        saveAs(pdfBlob, `Formulario_Encaixe_Exame_${grupo.matricula}_${grupo.data}.pdf`);
+        log(`✅ Gerado: Encaixe Exame para ${grupo.beneficiario}`);
+    }
+    async function gerarFichaEncaixeConsulta(grupo) {
+        const html = montarHTMLEncaixeConsulta(grupo);
+        const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Consulta_${grupo.matricula}_${grupo.data}.pdf`);
+        saveAs(pdfBlob, `Formulario_Encaixe_Consulta_${grupo.matricula}_${grupo.data}.pdf`);
+        log(`✅ Gerado: Encaixe Consulta para ${grupo.beneficiario}`);
+    }
+    function montarHTMLEncaixeExame(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const nasc = grupo.nascimento.split('-').reverse().join('/');
+        const ex = grupo.itens[0];
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - ENCAIXE</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div><hr><h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3><p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br><strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}</div>${montarRodape(ex.unidade)}</div>`;
+    }
+    function montarHTMLEncaixeConsulta(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const cons = grupo.itens[0];
+        const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
+        function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS - ENCAIXE</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${cons.hora}</div><div><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Especialidade:</strong> ${escapeHtml(cons.subespecialidade)}</div>${cons.obs ? `<div><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}<hr><h3 style="font-size: 14px; font-weight: bold;">📋 Anamnese</h3><div><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(cons.local)}</div>`;
+    }
+
+    function montarEtiqueta(grupo) {
+        const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________';
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 90mm; height: 36mm; padding: 4mm; text-align: center; border: 1px dashed #000; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;"><div style="font-size: 18px; font-weight: bold; margin-bottom: 2mm;">${escapeHtml(grupo.beneficiario)}</div><div style="font-size: 14px; font-weight: bold;">Matrícula: ${escapeHtml(grupo.matricula)}</div><div style="font-size: 14px; font-weight: bold;">Nascimento: ${nasc}</div></div>`;
+    }
+
+    // ==================== EVENTOS ====================
     document.getElementById('btnCarregarExames').onclick = carregarExames;
     document.getElementById('btnCarregarConsultas').onclick = carregarConsultas;
     document.getElementById('btnGerarManual').onclick = gerarLivreDemanda;
