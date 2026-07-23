@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Núcleo Atende + - Prevent Senior</title>
+    <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="Nucleo_Atende_Contingencia_Atalho.ico">
     <link rel="shortcut icon" href="Nucleo_Atende_Contingencia_Atalho.ico">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -121,7 +122,7 @@
         <div class="text-area"><div class="title"><span class="nucleo">Núcleo</span> <span class="atende">Atende +</span></div><div class="subtitle">CONTINGÊNCIA DE ATENDIMENTO</div></div>
     </div>
     <div class="main-content">
-        <!-- Seção 1: Carregar agendas + Nome do usuário -->
+        <!-- Seção 1: Carregar agendas + Nome do Usuário -->
         <div class="section-card">
             <div class="section-title"><i class="fas fa-upload"></i> 1. Carregar agendas</div>
             <div class="form-grid">
@@ -206,8 +207,14 @@
                 <div class="form-group"><label>Acompanhante:</label><select id="encaixeAcompanhante"><option value="Não">Não</option><option value="Sim">Sim</option></select></div>
                 <div class="form-group"><label>Data do atendimento:</label><input type="date" id="encaixeData"></div>
                 <div class="form-group"><label>Hora:</label><input type="time" id="encaixeHora"></div>
-                <div class="form-group"><label>Tipo:</label><select id="encaixeTipo"><option value="exame">Exame</option><option value="consulta">Consulta</option></select></div>
-                <div class="form-group"><label>Procedimento (exame) / Especialidade (consulta):</label><input type="text" id="encaixeProcedimento"></div>
+                <div class="form-group"><label>Tipo:</label>
+                    <select id="encaixeTipo">
+                        <option value="exame">Exame</option>
+                        <option value="consulta">Consulta</option>
+                        <option value="pronto_atendimento">Pronto Atendimento (Oftalmo)</option>
+                    </select>
+                </div>
+                <div class="form-group"><label>Procedimento (exame) / Especialidade (consulta) / Procedimento (Oftalmo):</label><input type="text" id="encaixeProcedimento"></div>
                 <div class="form-group"><label>Unidade / Local:</label><select id="encaixeLocal">
                     <option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Alemanha</option>
                     <option>Núcleo de Medicina Avançada e Diagnóstica Prevent Senior Barcelona</option>
@@ -487,7 +494,7 @@
         return canvas ? canvas.toDataURL() : '';
     }
 
-    // ==================== MAPEAMENTO DE ENDEREÇOS (normalizado) ====================
+    // ==================== MAPEAMENTO DE ENDEREÇOS ====================
     const enderecosUnidades = {
         "nucleo de medicina avancada e diagnostica alemanha": "Alameda Santos, 960 - Cerqueira César - São Paulo - SP",
         "nucleo de medicina avancada e diagnostica barcelona": "Rua Lourenço Marques, 158 - Vila Olímpia - São Paulo - SP",
@@ -523,20 +530,14 @@
     }
 
     function obterEnderecoUnidade(nomeUnidade) {
-        if (!nomeUnidade) {
-            console.log('⚠️ Unidade vazia, retornando endereço vazio.');
-            return '';
-        }
+        if (!nomeUnidade) return '';
         const chaveNormalizada = normalizarNomeUnidade(nomeUnidade);
-        console.log(`🔍 Buscando endereço para: "${nomeUnidade}" (normalizado: "${chaveNormalizada}")`);
         for (let [chave, endereco] of Object.entries(enderecosUnidades)) {
             if (chave === chaveNormalizada) {
-                console.log(`✅ Encontrou: "${chave}" -> "${endereco}"`);
                 return endereco;
             }
         }
-        console.log(`❌ Unidade não encontrada, retornando vazio.`);
-        return ''; // <--- RETORNA VAZIO
+        return '';
     }
 
     function montarRodape(unidade) {
@@ -544,11 +545,7 @@
         const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 80);
         const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 80);
         const endereco = obterEnderecoUnidade(unidade);
-        console.log(`📦 Endereço retornado para "${unidade}": "${endereco}"`);
-
-        // Se endereço estiver vazio, NÃO exibe a linha do endereço
         const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
-
         return `<div style="background: #f0f4f8; padding: 5mm; margin-top: 8mm; border-top: 1px solid #ccc; font-size: 10px; line-height: 1.2; width: 100%;">
                     <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
                     <div style="margin: 4px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304 | Site: www.preventsenior.com.br</div>
@@ -564,7 +561,7 @@
                 </div>`;
     }
 
-    // ==================== FICHAS ====================
+    // ==================== FICHAS AGENDADAS ====================
     async function gerarFichaExamesAgendados(grupo) {
         const html = montarHTMLExameAgendado(grupo);
         const pdfBlob = await htmlToPdf(html, `Formulario_Exames_${grupo.matricula}_${grupo.data}.pdf`);
@@ -586,7 +583,23 @@
         const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________';
         const itensHtml = grupo.itens.map(ex => `<li style="margin-bottom: 6px; font-size: 12px;"><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento || 'N/A')}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | <strong>Sala:</strong> ${escapeHtml(ex.andarSala)}<br><strong>Médico:</strong> ${escapeHtml(ex.medico || 'Não informado')} | <strong>Horário:</strong> ${ex.hora}</li>`).join('');
         const unidadeLocal = grupo.itens[0]?.unidade || 'Unidade não informada';
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES AGENDADOS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data de Nascimento:</strong> ${nasc}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data Agendada:</strong> ${dataFormat}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Exames / Procedimentos</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul></div>${montarRodape(unidadeLocal)}</div>`;
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES AGENDADOS</div>
+                        <div style="margin-bottom: 5mm;">
+                            <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                            <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                            <div><strong>Data de Nascimento:</strong> ${nasc}</div>
+                            <div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                            <div><strong>Data Agendada:</strong> ${dataFormat}</div>
+                        </div>
+                        <hr style="margin: 4mm 0;">
+                        <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Exames / Procedimentos</h3>
+                        <ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul>
+                    </div>
+                    ${montarRodape(unidadeLocal)}
+                </div>`;
     }
 
     function montarHTMLConsultaAgendada(grupo) {
@@ -595,9 +608,38 @@
         const localConsulta = grupo.itens[0]?.local || 'Unidade não informada';
         const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
         function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS AGENDADAS</div><div style="margin-bottom: 5mm;"><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Data da Consulta:</strong> ${dataFormat}</div><div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div></div><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">🩺 Dados da Consulta</h3><ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul><hr style="margin: 4mm 0;"><h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Anamnese</h3><div style="font-size: 12px; line-height: 1.4;"><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(localConsulta)}</div>`;
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS AGENDADAS</div>
+                        <div style="margin-bottom: 5mm;">
+                            <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                            <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                            <div><strong>Data da Consulta:</strong> ${dataFormat}</div>
+                            <div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                        </div>
+                        <hr style="margin: 4mm 0;">
+                        <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">🩺 Dados da Consulta</h3>
+                        <ul style="margin-left: 4mm; line-height: 1.3;">${itensHtml}</ul>
+                        <hr style="margin: 4mm 0;">
+                        <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 3mm;">📋 Anamnese</h3>
+                        <div style="font-size: 12px; line-height: 1.4;">
+                            <div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                            <div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div>
+                            <div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div>
+                        </div>
+                    </div>
+                    ${montarRodape(localConsulta)}
+                </div>`;
     }
 
+    // ==================== LIVRE DEMANDA ====================
     function gerarLivreDemanda() {
         const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
         if (!nomeUsuario) {
@@ -635,9 +677,26 @@
         const dataFormat = grupo.data.split('-').reverse().join('/');
         const nasc = grupo.nascimento.split('-').reverse().join('/');
         const ex = grupo.itens[0];
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - LIVRE DEMANDA</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div><hr><h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3><p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br><strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}</div>${montarRodape(ex.unidade)}</div>`;
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - LIVRE DEMANDA</div>
+                        <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                        <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                        <div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                        <div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div>
+                        <hr>
+                        <h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3>
+                        <p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br>
+                        <strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br>
+                        <strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>
+                        ${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}
+                    </div>
+                    ${montarRodape(ex.unidade)}
+                </div>`;
     }
 
+    // ==================== ENCAIXE (com Pronto Atendimento Oftalmo) ====================
     function gerarEncaixe() {
         const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
         if (!nomeUsuario) {
@@ -656,17 +715,35 @@
         const sala = document.getElementById('encaixeSala').value.trim();
         const profissional = document.getElementById('encaixeProfissional').value;
         const obs = document.getElementById('encaixeObs').value;
-        if (!mat || !nome || !nasc || !data || !hora || !procedimentoEspec) { alert('Preencha todos os campos obrigatórios'); return; }
-        const grupo = { matricula: mat, beneficiario: nome, data: data, nascimento: nasc, acompanhante: acomp, itens: tipo === 'exame' ? [{ procedimento: procedimentoEspec, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }] : [{ subespecialidade: procedimentoEspec, hora: hora, local: unidade, profissional: profissional, obs: obs }] };
+        if (!mat || !nome || !nasc || !data || !hora || !procedimentoEspec) {
+            alert('Preencha todos os campos obrigatórios');
+            return;
+        }
+        const grupo = {
+            matricula: mat,
+            beneficiario: nome,
+            data: data,
+            nascimento: nasc,
+            acompanhante: acomp,
+            itens: []
+        };
+
         if (tipo === 'exame') {
+            grupo.itens = [{ procedimento: procedimentoEspec, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }];
             gerarFichaEncaixeExame(grupo);
             registrarGeracao('Exame (Encaixe)', grupo, data, procedimentoEspec, hora, profissional, unidade);
-        } else {
+        } else if (tipo === 'consulta') {
+            grupo.itens = [{ subespecialidade: procedimentoEspec, hora: hora, local: unidade, profissional: profissional, obs: obs }];
             gerarFichaEncaixeConsulta(grupo);
             registrarGeracao('Consulta (Encaixe)', grupo, data, procedimentoEspec, hora, profissional, unidade);
+        } else if (tipo === 'pronto_atendimento') {
+            grupo.itens = [{ especialidade: 'Oftalmologia', procedimento: procedimentoEspec, hora: hora, local: unidade, profissional: profissional, obs: obs }];
+            gerarFichaEncaixeProntoAtendimento(grupo);
+            registrarGeracao('Pronto Atendimento (Oftalmo)', grupo, data, procedimentoEspec, hora, profissional, unidade);
         }
     }
 
+    // ==================== ENCAIXE - EXAME ====================
     async function gerarFichaEncaixeExame(grupo) {
         const html = montarHTMLEncaixeExame(grupo);
         const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Exame_${grupo.matricula}_${grupo.data}.pdf`);
@@ -674,6 +751,30 @@
         log(`✅ Gerado: Encaixe Exame para ${grupo.beneficiario}`);
     }
 
+    function montarHTMLEncaixeExame(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const nasc = grupo.nascimento.split('-').reverse().join('/');
+        const ex = grupo.itens[0];
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - ENCAIXE</div>
+                        <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                        <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                        <div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                        <div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div>
+                        <hr>
+                        <h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3>
+                        <p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br>
+                        <strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br>
+                        <strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>
+                        ${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}
+                    </div>
+                    ${montarRodape(ex.unidade)}
+                </div>`;
+    }
+
+    // ==================== ENCAIXE - CONSULTA ====================
     async function gerarFichaEncaixeConsulta(grupo) {
         const html = montarHTMLEncaixeConsulta(grupo);
         const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Consulta_${grupo.matricula}_${grupo.data}.pdf`);
@@ -681,24 +782,89 @@
         log(`✅ Gerado: Encaixe Consulta para ${grupo.beneficiario}`);
     }
 
-    function montarHTMLEncaixeExame(grupo) {
-        const dataFormat = grupo.data.split('-').reverse().join('/');
-        const nasc = grupo.nascimento.split('-').reverse().join('/');
-        const ex = grupo.itens[0];
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO EXAMES - ENCAIXE</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${nasc} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${ex.hora}</div><hr><h3 style="font-size: 14px; font-weight: bold;">📋 Procedimento</h3><p><strong>Procedimento:</strong> ${escapeHtml(ex.procedimento)}<br><strong>Unidade:</strong> ${escapeHtml(ex.unidade)} | Sala: ${escapeHtml(ex.andarSala)}<br><strong>Profissional:</strong> ${escapeHtml(ex.medico)}</p>${ex.obs ? `<div><strong>Observação:</strong> ${escapeHtml(ex.obs)}</div>` : ''}</div>${montarRodape(ex.unidade)}</div>`;
-    }
-
     function montarHTMLEncaixeConsulta(grupo) {
         const dataFormat = grupo.data.split('-').reverse().join('/');
         const cons = grupo.itens[0];
         const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
         function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;"><div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div><div><div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS - ENCAIXE</div><div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div><div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div><div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div><div><strong>Data:</strong> ${dataFormat} às ${cons.hora}</div><div><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Especialidade:</strong> ${escapeHtml(cons.subespecialidade)}</div>${cons.obs ? `<div><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}<hr><h3 style="font-size: 14px; font-weight: bold;">📋 Anamnese</h3><div><div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div><div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div><div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div><div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div><div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div><div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div></div></div>${montarRodape(cons.local)}</div>`;
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO CONSULTAS - ENCAIXE</div>
+                        <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                        <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                        <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                        <div><strong>Data:</strong> ${dataFormat} às ${cons.hora}</div>
+                        <div><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Subespecialidade:</strong> ${escapeHtml(cons.subespecialidade)}</div>
+                        ${cons.obs ? `<div><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
+                        <hr>
+                        <h3 style="font-size: 14px; font-weight: bold;">📋 Anamnese</h3>
+                        <div>
+                            <div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                            <div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div>
+                            <div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div>
+                        </div>
+                    </div>
+                    ${montarRodape(cons.local)}
+                </div>`;
     }
 
+    // ==================== ENCAIXE - PRONTO ATENDIMENTO OFTALMO ====================
+    async function gerarFichaEncaixeProntoAtendimento(grupo) {
+        const html = montarHTMLProntoAtendimentoEncaixe(grupo);
+        const pdfBlob = await htmlToPdf(html, `Formulario_ProntoAtendimento_${grupo.matricula}_${grupo.data}.pdf`);
+        saveAs(pdfBlob, `Formulario_ProntoAtendimento_${grupo.matricula}_${grupo.data}.pdf`);
+        log(`✅ Gerado: Pronto Atendimento (Oftalmo) para ${grupo.beneficiario}`);
+    }
+
+    function montarHTMLProntoAtendimentoEncaixe(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const cons = grupo.itens[0];
+        const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
+        function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
+                        <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                        <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                        <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                        <div><strong>Data:</strong> ${dataFormat} às ${cons.hora}</div>
+                        <div><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
+                        <div><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
+                        ${cons.obs ? `<div><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
+                        <hr>
+                        <h3 style="font-size: 14px; font-weight: bold;">📋 Anamnese Oftalmológica</h3>
+                        <div>
+                            <div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                            <div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                            <div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div>
+                            <div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div>
+                            <div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div>
+                        </div>
+                    </div>
+                    ${montarRodape(cons.local)}
+                </div>`;
+    }
+
+    // ==================== ETIQUETA ====================
     function montarEtiqueta(grupo) {
         const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________';
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 90mm; height: 36mm; padding: 4mm; text-align: center; border: 1px dashed #000; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;"><div style="font-size: 18px; font-weight: bold; margin-bottom: 2mm;">${escapeHtml(grupo.beneficiario)}</div><div style="font-size: 14px; font-weight: bold;">Matrícula: ${escapeHtml(grupo.matricula)}</div><div style="font-size: 14px; font-weight: bold;">Nascimento: ${nasc}</div></div>`;
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 90mm; height: 36mm; padding: 4mm; text-align: center; border: 1px dashed #000; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box;">
+                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 2mm;">${escapeHtml(grupo.beneficiario)}</div>
+                    <div style="font-size: 14px; font-weight: bold;">Matrícula: ${escapeHtml(grupo.matricula)}</div>
+                    <div style="font-size: 14px; font-weight: bold;">Nascimento: ${nasc}</div>
+                </div>`;
     }
 
     // ==================== EVENTOS ====================
