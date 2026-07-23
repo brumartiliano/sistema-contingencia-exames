@@ -863,27 +863,20 @@
     const dataFormat = grupo.data.split('-').reverse().join('/');
     const cons = grupo.itens[0];
 
-    // Função que gera exatamente 10 linhas com borda inferior
-    function dezLinhas() {
-        let linhas = '';
-        for (let i = 0; i < 10; i++) {
-            linhas += `<div style="border-bottom: 1px solid #000; width: 100%; height: 14px; margin-top: 2px;"></div>`;
-        }
-        return `<div style="margin-top: 2px;">${linhas}</div>`;
+    // Linha simples para campos curtos
+    function linhaSimples() {
+        return '<div style="border-bottom: 1px solid #000; width: 100%; height: 14px; margin-top: 1px;"></div>';
+    }
+    // 5 linhas para os itens 1, 9, 10
+    function cincoLinhas() {
+        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
     }
 
-    // Função que gera uma linha simples (para campos curtos)
-    function umaLinha() {
-        return `<div style="border-bottom: 1px solid #000; width: 100%; height: 14px; margin-top: 2px;"></div>`;
-    }
-
-    return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-                <div style="position: absolute; top: 2.5mm; right: 6mm; font-size: 6px; color: #333; background: #f0f0f0; padding: 1px 3px; border-radius: 2px; font-weight: bold;">FOR.NMA.RCP.022.R0</div>
-                
+    return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 4mm 7mm 3mm 7mm; box-sizing: border-box; font-size: 9px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                <div style="position: absolute; top: 3mm; right: 7mm; font-size: 7px; color: #333; background: #f0f0f0; padding: 1px 4px; border-radius: 2px; font-weight: bold;">FOR.NMA.RCP.022.R0</div>
                 <div>
-                    <div style="background: #002b49; color: white; padding: 1.5mm; text-align: center; font-size: 9.5px; font-weight: bold; margin-bottom: 2mm;">FORMULÁRIO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px; margin-bottom: 1mm; font-size: 8px;">
+                    <div style="background: #002b49; color: white; padding: 2mm; text-align: center; font-size: 10.5px; font-weight: bold; margin-bottom: 2.5mm;">FORMULÁRIO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px; margin-bottom: 1.5mm; font-size: 9px;">
                         <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
                         <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
                         <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')}</div>
@@ -891,26 +884,19 @@
                         <div><strong>Data:</strong> ${dataFormat} ${cons.hora}</div>
                         <div><strong>Profissional:</strong> ${escapeHtml(cons.profissional)}</div>
                     </div>
-                    
-                    <div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
-                    <div style="font-size: 7.5px; margin-bottom: 0.8mm;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
-                    ${cons.obs ? `<div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Obs:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
-                    
-                    <hr style="margin: 0.6mm 0; border: 0.5px solid #ccc;">
-                    <div style="font-size: 9px; font-weight: bold; margin: 0.3mm 0 0.3mm;">📋 Anamnese Oftalmológica</div>
-                    
-                    <div style="display: flex; flex-direction: column; gap: 1.5mm; font-size: 7.5px; line-height: 1.2;">
-                        
-                        <!-- Item 1 com 10 linhas -->
+                    <div style="font-size: 8.5px; margin-bottom: 0.8mm;"><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
+                    <div style="font-size: 8.5px; margin-bottom: 1mm;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
+                    ${cons.obs ? `<div style="font-size: 8.5px; margin-bottom: 0.8mm;"><strong>Obs:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
+                    <hr style="margin: 0.8mm 0; border: 0.5px solid #ccc;">
+                    <div style="font-size: 10px; font-weight: bold; margin: 0.5mm 0 0.5mm;">📋 Anamnese Oftalmológica</div>
+                    <div style="display: flex; flex-direction: column; gap: 1.2mm; font-size: 8.5px; line-height: 1.2;">
                         <div>
                             <strong>1. Queixa Principal</strong><br>
                             Olho acometido: ( ) Direito ( ) Esquerdo ( ) Ambos |
                             Início: ( ) Súbito ( ) Gradual |
                             Tempo de evolução: __________
-                            ${dezLinhas()}
+                            ${cincoLinhas()}
                         </div>
-                        
-                        <!-- Item 2 -->
                         <div>
                             <strong>2. Sintomas Apresentados</strong><br>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
@@ -933,11 +919,7 @@
                             </div>
                             Outros: <span style="border-bottom: 1px solid #000; display: inline-block; width: 90%;">&nbsp;</span>
                         </div>
-                        
-                        <!-- Espaço entre 2 e 3 -->
                         <div style="margin-top: 1mm;"></div>
-                        
-                        <!-- Item 3 e 4 lado a lado -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm;">
                             <div>
                                 <strong>3. Trauma ou Corpo Estranho</strong><br>
@@ -954,11 +936,7 @@
                                 Higienização adequada: ( ) Não ( ) Sim
                             </div>
                         </div>
-                        
-                        <!-- Espaço entre 4 e 5 -->
                         <div style="margin-top: 1mm;"></div>
-                        
-                        <!-- Item 5 -->
                         <div>
                             <strong>5. Antecedentes Oftalmológicos</strong><br>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
@@ -977,11 +955,7 @@
                             </div>
                             Cirurgia ou procedimento ocular recente: ( ) Não ( ) Sim — Qual/data: __________________
                         </div>
-                        
-                        <!-- Espaço entre 5 e 6 -->
                         <div style="margin-top: 1mm;"></div>
-                        
-                        <!-- Item 6 e 7 lado a lado -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm;">
                             <div>
                                 <strong>6. Condições Clínicas</strong><br>
@@ -1000,12 +974,8 @@
                                 Quais: ___________________________
                             </div>
                         </div>
-                        
-                        <!-- Espaço entre 7 e 8 -->
                         <div style="margin-top: 1mm;"></div>
-                        
-                        <!-- Item 8 -->
-                        <div style="border: 1px solid #000; padding: 0.5mm;">
+                        <div style="border: 1px solid #000; padding: 0.8mm;">
                             <strong>8. Sinais de Alerta</strong><br>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
                                 <div>
@@ -1021,22 +991,16 @@
                             </div>
                             ( ) Nenhum identificado
                         </div>
-                        
-                        <!-- Item 9 com 10 linhas -->
                         <div>
                             <strong>9. Avaliação / Observações</strong>
-                            ${dezLinhas()}
+                            ${cincoLinhas()}
                         </div>
-                        
-                        <!-- Item 10 com 10 linhas -->
                         <div>
                             <strong>10. Conduta / Orientações</strong>
-                            ${dezLinhas()}
+                            ${cincoLinhas()}
                         </div>
                     </div>
                 </div>
-                
-                <!-- RODAPÉ COMPACTO -->
                 ${montarRodapeCompacto(cons.local)}
             </div>`;
 }
