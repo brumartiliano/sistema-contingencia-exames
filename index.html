@@ -540,26 +540,48 @@
         return '';
     }
 
-function montarRodapeCompacto(unidade) {
-    const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 40);
-    const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 40);
-    const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 40);
-    const endereco = obterEnderecoUnidade(unidade);
-    const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
-    return `<div style="background: #f0f4f8; padding: 1.5mm; margin-top: 2mm; border-top: 1px solid #ccc; font-size: 6.5px; line-height: 1.1; width: 100%;">
-                <div><strong>Local:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
-                <div style="margin: 1px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304</div>
-                <div><strong>RESULTADOS PELA INTERNET</strong></div>
-                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                    <div style="flex:1;">Acesse pelo Portal ou APP. <strong>QR CODE</strong></div>
-                    <div style="display: flex; gap: 3px; margin-left: 3px;">
-                        <div style="text-align:center;"><img src="${qrPortal}" width="28" height="28"><br><span style="font-size:5px;">Portal</span></div>
-                        <div style="text-align:center;"><img src="${qrApple}" width="28" height="28"><br><span style="font-size:5px;">Apple</span></div>
-                        <div style="text-align:center;"><img src="${qrPlay}" width="28" height="28"><br><span style="font-size:5px;">Play</span></div>
+    function montarRodape(unidade) {
+        const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 60);
+        const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 60);
+        const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 60);
+        const endereco = obterEnderecoUnidade(unidade);
+        const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
+        return `<div style="background: #f0f4f8; padding: 3mm; margin-top: 4mm; border-top: 1px solid #ccc; font-size: 8px; line-height: 1.1; width: 100%;">
+                    <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
+                    <div style="margin: 2px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304</div>
+                    <div><strong>RESULTADOS PELA INTERNET</strong></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div style="flex:1;">Acesse pelo Portal do Beneficiário ou APP. <strong>Acesse via QR CODE</strong></div>
+                        <div style="display: flex; gap: 6px; margin-left: 6px;">
+                            <div style="text-align:center;"><img src="${qrPortal}" width="40" height="40"><br><span style="font-size:6px;">Portal</span></div>
+                            <div style="text-align:center;"><img src="${qrApple}" width="40" height="40"><br><span style="font-size:6px;">Apple</span></div>
+                            <div style="text-align:center;"><img src="${qrPlay}" width="40" height="40"><br><span style="font-size:6px;">Play</span></div>
+                        </div>
                     </div>
-                </div>
-            </div>`;
-}
+                </div>`;
+    }
+
+    function montarRodapeCompacto(unidade) {
+        const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 35);
+        const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 35);
+        const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 35);
+        const endereco = obterEnderecoUnidade(unidade);
+        const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
+        return `<div style="background: #f0f4f8; padding: 2mm; margin-top: 2mm; border-top: 1px solid #ccc; font-size: 7px; line-height: 1.1; width: 100%;">
+                    <div><strong>Local:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
+                    <div style="margin: 1px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304</div>
+                    <div><strong>RESULTADOS PELA INTERNET</strong></div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                        <div style="flex:1;">Acesse pelo Portal ou APP. <strong>QR CODE</strong></div>
+                        <div style="display: flex; gap: 4px; margin-left: 4px;">
+                            <div style="text-align:center;"><img src="${qrPortal}" width="28" height="28"><br><span style="font-size:5px;">Portal</span></div>
+                            <div style="text-align:center;"><img src="${qrApple}" width="28" height="28"><br><span style="font-size:5px;">Apple</span></div>
+                            <div style="text-align:center;"><img src="${qrPlay}" width="28" height="28"><br><span style="font-size:5px;">Play</span></div>
+                        </div>
+                    </div>
+                </div>`;
+    }
+
     // ==================== FICHAS AGENDADAS ====================
     async function gerarFichaExamesAgendados(grupo) {
         const html = montarHTMLExameAgendado(grupo);
@@ -656,8 +678,25 @@ function montarRodapeCompacto(unidade) {
         const sala = document.getElementById('manualSala').value.trim();
         const profissional = document.getElementById('manualProfissional').value;
         const obs = document.getElementById('manualObs').value;
-        if (!mat || !nome || !nasc || !data || !hora) { alert('Preencha todos os campos obrigatórios'); return; }
-        const grupo = { matricula: mat, beneficiario: nome, data: data, nascimento: nasc, acompanhante: acomp, itens: [{ procedimento: proc, hora: hora, unidade: unidade, andarSala: sala, medico: profissional, obs: obs }] };
+        if (!mat || !nome || !nasc || !data || !hora) {
+            alert('Preencha todos os campos obrigatórios');
+            return;
+        }
+        const grupo = {
+            matricula: mat,
+            beneficiario: nome,
+            data: data,
+            nascimento: nasc,
+            acompanhante: acomp,
+            itens: [{
+                procedimento: proc,
+                hora: hora,
+                unidade: unidade,
+                andarSala: sala,
+                medico: profissional,
+                obs: obs
+            }]
+        };
         gerarFichaLivreDemanda(grupo);
         registrarGeracao('Exame (Livre Demanda)', grupo, data, proc, hora, profissional, unidade);
     }
@@ -695,7 +734,7 @@ function montarRodapeCompacto(unidade) {
                 </div>`;
     }
 
-    // ==================== ENCAIXE (com Pronto Atendimento Oftalmo) ====================
+    // ==================== ENCAIXE ====================
     function gerarEncaixe() {
         const nomeUsuario = document.getElementById('nomeUsuario').value.trim();
         if (!nomeUsuario) {
@@ -742,7 +781,6 @@ function montarRodapeCompacto(unidade) {
         }
     }
 
-    // ==================== ENCAIXE - EXAME ====================
     async function gerarFichaEncaixeExame(grupo) {
         const html = montarHTMLEncaixeExame(grupo);
         const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Exame_${grupo.matricula}_${grupo.data}.pdf`);
@@ -773,7 +811,6 @@ function montarRodapeCompacto(unidade) {
                 </div>`;
     }
 
-    // ==================== ENCAIXE - CONSULTA ====================
     async function gerarFichaEncaixeConsulta(grupo) {
         const html = montarHTMLEncaixeConsulta(grupo);
         const pdfBlob = await htmlToPdf(html, `Formulario_Encaixe_Consulta_${grupo.matricula}_${grupo.data}.pdf`);
@@ -814,7 +851,7 @@ function montarRodapeCompacto(unidade) {
                 </div>`;
     }
 
-    // ==================== ENCAIXE - PRONTO ATENDIMENTO OFTALMO ====================
+    // ==================== PRONTO ATENDIMENTO OFTALMO ====================
     async function gerarFichaEncaixeProntoAtendimento(grupo) {
         const html = montarHTMLProntoAtendimentoEncaixe(grupo);
         const pdfBlob = await htmlToPdf(html, `Formulario_ProntoAtendimento_${grupo.matricula}_${grupo.data}.pdf`);
@@ -822,82 +859,63 @@ function montarRodapeCompacto(unidade) {
         log(`✅ Gerado: Pronto Atendimento (Oftalmo) para ${grupo.beneficiario}`);
     }
 
-function montarHTMLProntoAtendimentoEncaixe(grupo) {
-    const dataFormat = grupo.data.split('-').reverse().join('/');
-    const cons = grupo.itens[0];
-    
-    // Linha única para campos curtos
-    const linhaUnica = '<div style="border-bottom: 1px solid #000; width: 100%; height: 11px; margin-bottom: 2px;"></div>';
-    
-    // Para campos que precisam de 2 linhas (QP, Familiares, Observações, Conduta)
-    function duasLinhas() { 
-        return `<div style="margin-top: 1px;">${linhaUnica}${linhaUnica}</div>`; 
-    }
-    
-    // Para campos de uma linha (Medicamentos, Alergias)
-    function umaLinha() { 
-        return `<div style="margin-top: 1px;">${linhaUnica}</div>`; 
-    }
+    function montarHTMLProntoAtendimentoEncaixe(grupo) {
+        const dataFormat = grupo.data.split('-').reverse().join('/');
+        const cons = grupo.itens[0];
 
-    return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-                <!-- Código do documento (mais compacto) -->
-                <div style="position: absolute; top: 2.5mm; right: 6mm; font-size: 6px; color: #333; background: #f0f0f0; padding: 1px 3px; border-radius: 2px; font-weight: bold;">FOR.NMA.RCP.022.R0</div>
-                
-                <div>
-                    <!-- TÍTULO (sem "ATENDIMENTO") -->
-                    <div style="background: #002b49; color: white; padding: 1.5mm; text-align: center; font-size: 9.5px; font-weight: bold; margin-bottom: 2mm;">FORMULÁRIO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
-                    
-                    <!-- DADOS DO PACIENTE (grid compacto com 2 colunas) -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0px 4px; margin-bottom: 1mm; font-size: 8px;">
-                        <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
-                        <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
-                        <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')}</div>
-                        <div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
-                        <div><strong>Data:</strong> ${dataFormat} ${cons.hora}</div>
-                        <div><strong>Profissional:</strong> ${escapeHtml(cons.profissional)}</div>
-                    </div>
-                    
-                    <!-- Local e Especialidade -->
-                    <div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
-                    
-                    <!-- Procedimento -->
-                    <div style="font-size: 7.5px; margin-bottom: 1mm;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
-                    
-                    <!-- Observação (se houver) -->
-                    ${cons.obs ? `<div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Obs:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
-                    
-                    <!-- LINHA DE SEPARAÇÃO (com menos espaço) -->
-                    <hr style="margin: 0.8mm 0; border: 0.5px solid #ccc;">
-                    
-                    <!-- TÍTULO DA ANAMNESE (mais compacto) -->
-                    <div style="font-size: 9px; font-weight: bold; margin: 0.3mm 0 0.3mm;">📋 Anamnese Oftalmológica</div>
-                    
-                    <!-- ANAMNESE EM GRID (2 colunas) -->
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 3mm; font-size: 7.5px; line-height: 1.1;">
-                        
-                        <!-- COLUNA ESQUERDA (itens 1, 2 e 3) -->
-                        <div>
-                            <div><strong>🩺 1. QP</strong>${duasLinhas()}</div>
-                            <div style="margin-top: 1mm;"><strong>📖 2. HDA</strong><br>Início: _____ Duração: _____ Intensidade: _____<br>Melhora/piora: _____ Sintomas: _____</div>
-                            <div style="margin-top: 1mm;"><strong>🧬 3. Antecedentes</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias<br>Outros: _____ Cirurgias: _____ Internações: _____</div>
+        // Linha para campos de uma linha (medicamentos, alergias)
+        function linhaSimples() {
+            return '<div style="border-bottom: 1px solid #000; width: 100%; height: 14px; margin-top: 2px;"></div>';
+        }
+        // Linhas para campos com mais texto (QP, familiares, observações, conduta)
+        function duasLinhas() {
+            return `<div style="margin-top: 2px;">${linhaSimples()}${linhaSimples()}</div>`;
+        }
+
+        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                    <div style="position: absolute; top: 2.5mm; right: 6mm; font-size: 6px; color: #333; background: #f0f0f0; padding: 1px 3px; border-radius: 2px; font-weight: bold;">FOR.NMA.RCP.022.R0</div>
+                    <div>
+                        <div style="background: #002b49; color: white; padding: 1.5mm; text-align: center; font-size: 9.5px; font-weight: bold; margin-bottom: 2mm;">FORMULÁRIO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px; margin-bottom: 1mm; font-size: 8px;">
+                            <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
+                            <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
+                            <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')}</div>
+                            <div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                            <div><strong>Data:</strong> ${dataFormat} ${cons.hora}</div>
+                            <div><strong>Profissional:</strong> ${escapeHtml(cons.profissional)}</div>
                         </div>
-                        
-                        <!-- COLUNA DIREITA (itens 4, 5, 6, 7, 8, 9) -->
-                        <div>
-                            <div style="margin-top: 1mm;"><strong>💊 4. Medicamentos</strong> ( ) Não ( ) Sim → Quais: ${umaLinha()}</div>
-                            <div style="margin-top: 1mm;"><strong>⚠️ 5. Alergias</strong> ( ) Não ( ) Sim → Quais: ${umaLinha()}</div>
+                        <div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
+                        <div style="font-size: 7.5px; margin-bottom: 1mm;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
+                        ${cons.obs ? `<div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Obs:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
+                        <hr style="margin: 0.8mm 0; border: 0.5px solid #ccc;">
+                        <div style="font-size: 9px; font-weight: bold; margin: 0.3mm 0 0.3mm;">📋 Anamnese Oftalmológica</div>
+                        <div style="font-size: 7.5px; line-height: 1.15;">
+                            <!-- Item 1 - QP (largura total) -->
+                            <div><strong>🩺 1. Queixa Principal (QP)</strong>${duasLinhas()}</div>
+                            <!-- Item 2 e 4 lado a lado -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 1mm;">
+                                <div><strong>📖 2. HDA</strong><br>Início: _____ Duração: _____ Intensidade: _____<br>Melhora/piora: _____ Sintomas: _____</div>
+                                <div><strong>💊 4. Medicamentos</strong> ( ) Não ( ) Sim → Quais: ${linhaSimples()}</div>
+                            </div>
+                            <!-- Item 3 e 5 lado a lado -->
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 1mm;">
+                                <div><strong>🧬 3. Antecedentes</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias<br>Outros: _____ Cirurgias: _____ Internações: _____</div>
+                                <div><strong>⚠️ 5. Alergias</strong> ( ) Não ( ) Sim → Quais: ${linhaSimples()}</div>
+                            </div>
+                            <!-- Item 6 - Familiares (largura total) -->
                             <div style="margin-top: 1mm;"><strong>👨‍👩‍👧 6. Familiares</strong>${duasLinhas()}</div>
+                            <!-- Item 7 - Hábitos (largura total) -->
                             <div style="margin-top: 1mm;"><strong>🍷 7. Hábitos</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade ( ) Não ( ) Sim</div>
+                            <!-- Item 8 - Observações (largura total) -->
                             <div style="margin-top: 1mm;"><strong>📋 8. Observações</strong>${duasLinhas()}</div>
+                            <!-- Item 9 - Conduta (largura total) -->
                             <div style="margin-top: 1mm;"><strong>🧾 9. Conduta</strong>${duasLinhas()}</div>
                         </div>
                     </div>
-                </div>
-                
-                <!-- RODAPÉ COMPACTO -->
-                ${montarRodapeCompacto(cons.local)}
-            </div>`;
-}
+                    ${montarRodapeCompacto(cons.local)}
+                </div>`;
+    }
+
     // ==================== ETIQUETA ====================
     function montarEtiqueta(grupo) {
         const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________';
