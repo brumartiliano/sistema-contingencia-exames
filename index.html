@@ -867,13 +867,9 @@
     function linhaSimples() {
         return '<div style="border-bottom: 1px solid #000; width: 100%; height: 13px; margin-top: 1px;"></div>';
     }
-    // Três linhas para campos que precisam de mais espaço (itens 1, 9, 10)
+    // Linhas para campos que precisam de mais espaço (itens 9, 10)
     function tresLinhas() {
         return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
-    }
-    // Duas linhas (para alguns campos)
-    function duasLinhas() {
-        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}</div>`;
     }
 
     return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
@@ -909,38 +905,47 @@
                     <!-- TÍTULO DA ANAMNESE -->
                     <div style="font-size: 9px; font-weight: bold; margin: 0.3mm 0 0.3mm;">📋 Anamnese Oftalmológica</div>
                     
-                    <!-- ANAMNESE OFTALMOLÓGICA RESUMIDA -->
-                    <div style="font-size: 7.5px; line-height: 1.2;">
+                    <!-- ANAMNESE COM FLEX PARA PREENCHER A PÁGINA -->
+                    <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 0.8mm; font-size: 7.5px; line-height: 1.2;">
                         
-                        <!-- Item 1: Queixa principal (com 3 linhas) -->
+                        <!-- Linha 1: Item 1 (Queixa Principal) e Item 2 (Sintomas) lado a lado? Não, melhor manter em coluna única com flex para distribuir.
+                        Vou colocar os itens 1 a 8 em uma coluna, e depois 9 e 10 com mais linhas. -->
+                        
+                        <!-- Item 1: Queixa principal (com 2 linhas) -->
                         <div>
                             <strong>1. Queixa Principal</strong><br>
                             Olho acometido: ( ) Direito ( ) Esquerdo ( ) Ambos |
                             Início: ( ) Súbito ( ) Gradual |
                             Tempo de evolução: __________
-                            ${tresLinhas()}
+                            <div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}</div>
                         </div>
                         
-                        <!-- Item 2: Sintomas -->
-                        <div style="margin-top: 0.8mm;">
+                        <!-- Item 2: Sintomas (em grid de 2 colunas para economizar espaço) -->
+                        <div>
                             <strong>2. Sintomas Apresentados</strong><br>
-                            ( ) Dor ocular — Intensidade: ____/10
-                            ( ) Olho vermelho
-                            ( ) Coceira
-                            ( ) Secreção<br>
-                            ( ) Visão embaçada
-                            ( ) Perda visual
-                            ( ) Fotofobia
-                            ( ) Lacrimejamento<br>
-                            ( ) Moscas volantes
-                            ( ) Flashes luminosos
-                            ( ) Sombra/cortina na visão
-                            ( ) Visão dupla<br>
-                            Outros: ______________________________________________________________
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
+                                <div>
+                                    ( ) Dor ocular — Intensidade: ____/10<br>
+                                    ( ) Olho vermelho<br>
+                                    ( ) Coceira<br>
+                                    ( ) Secreção<br>
+                                    ( ) Visão embaçada<br>
+                                    ( ) Perda visual
+                                </div>
+                                <div>
+                                    ( ) Fotofobia<br>
+                                    ( ) Lacrimejamento<br>
+                                    ( ) Moscas volantes<br>
+                                    ( ) Flashes luminosos<br>
+                                    ( ) Sombra/cortina na visão<br>
+                                    ( ) Visão dupla
+                                </div>
+                            </div>
+                            Outros: <span style="border-bottom: 1px solid #000; display: inline-block; width: 90%;">&nbsp;</span>
                         </div>
                         
                         <!-- Item 3 e 4 lado a lado (Trauma + Lentes) -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 0.8mm;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm;">
                             <div>
                                 <strong>3. Trauma ou Corpo Estranho</strong><br>
                                 ( ) Não ( ) Sim<br>
@@ -957,28 +962,34 @@
                             </div>
                         </div>
                         
-                        <!-- Item 5: Antecedentes Oftalmológicos -->
-                        <div style="margin-top: 0.8mm;">
+                        <!-- Item 5: Antecedentes Oftalmológicos (em grid de 2 colunas para otimizar) -->
+                        <div>
                             <strong>5. Antecedentes Oftalmológicos</strong><br>
-                            ( ) Glaucoma
-                            ( ) Catarata
-                            ( ) Descolamento de retina
-                            ( ) Cirurgia ocular<br>
-                            ( ) Trauma anterior
-                            ( ) Uso de colírio
-                            ( ) Visão apenas em um olho
-                            ( ) Outros: __________<br>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
+                                <div>
+                                    ( ) Glaucoma<br>
+                                    ( ) Catarata<br>
+                                    ( ) Descolamento de retina<br>
+                                    ( ) Cirurgia ocular
+                                </div>
+                                <div>
+                                    ( ) Trauma anterior<br>
+                                    ( ) Uso de colírio<br>
+                                    ( ) Visão apenas em um olho<br>
+                                    ( ) Outros: __________
+                                </div>
+                            </div>
                             Cirurgia ou procedimento ocular recente: ( ) Não ( ) Sim — Qual/data: __________________
                         </div>
                         
-                        <!-- Item 6 e 7 lado a lado (Condições clínicas + Medicamentos/Alergias) -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 0.8mm;">
+                        <!-- Item 6 e 7 lado a lado (Condições + Medicamentos) -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm;">
                             <div>
                                 <strong>6. Condições Clínicas</strong><br>
-                                ( ) Diabetes
-                                ( ) Hipertensão
+                                ( ) Diabetes<br>
+                                ( ) Hipertensão<br>
                                 ( ) Cardiopatia<br>
-                                ( ) Doença autoimune
+                                ( ) Doença autoimune<br>
                                 ( ) Imunossupressão<br>
                                 Outros: __________________________
                             </div>
@@ -992,25 +1003,31 @@
                         </div>
                         
                         <!-- Item 8: Sinais de Alerta (com borda) -->
-                        <div style="margin-top: 0.8mm; border: 1px solid #000; padding: 0.8mm;">
+                        <div style="border: 1px solid #000; padding: 0.5mm; margin-top: 0.5mm;">
                             <strong>8. Sinais de Alerta</strong><br>
-                            ( ) Perda súbita da visão
-                            ( ) Trauma perfurante
-                            ( ) Produto químico<br>
-                            ( ) Dor intensa com náusea/vômito
-                            ( ) Sombra ou cortina na visão<br>
-                            ( ) Pós-operatório ocular com dor ou perda visual
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
+                                <div>
+                                    ( ) Perda súbita da visão<br>
+                                    ( ) Trauma perfurante<br>
+                                    ( ) Produto químico
+                                </div>
+                                <div>
+                                    ( ) Dor intensa com náusea/vômito<br>
+                                    ( ) Sombra ou cortina na visão<br>
+                                    ( ) Pós-operatório ocular com dor ou perda visual
+                                </div>
+                            </div>
                             ( ) Nenhum identificado
                         </div>
                         
                         <!-- Item 9: Avaliação/Observações (com 3 linhas) -->
-                        <div style="margin-top: 0.8mm;">
+                        <div>
                             <strong>9. Avaliação / Observações</strong>
                             ${tresLinhas()}
                         </div>
                         
                         <!-- Item 10: Conduta (com 3 linhas) -->
-                        <div style="margin-top: 0.8mm;">
+                        <div>
                             <strong>10. Conduta / Orientações</strong>
                             ${tresLinhas()}
                         </div>
