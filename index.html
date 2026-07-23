@@ -863,13 +863,17 @@
     const dataFormat = grupo.data.split('-').reverse().join('/');
     const cons = grupo.itens[0];
 
-    // Linha simples para campos curtos (Medicamentos, Alergias)
+    // Linha simples para campos curtos
     function linhaSimples() {
-        return '<div style="border-bottom: 1px solid #000; width: 100%; height: 14px; margin-top: 2px;"></div>';
+        return '<div style="border-bottom: 1px solid #000; width: 100%; height: 13px; margin-top: 1px;"></div>';
     }
-    // Três linhas para campos que precisam de mais espaço
+    // Três linhas para campos que precisam de mais espaço (itens 1, 9, 10)
     function tresLinhas() {
-        return `<div style="margin-top: 2px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
+        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
+    }
+    // Duas linhas (para alguns campos)
+    function duasLinhas() {
+        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}</div>`;
     }
 
     return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
@@ -894,67 +898,121 @@
                     <div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
                     
                     <!-- Procedimento -->
-                    <div style="font-size: 7.5px; margin-bottom: 1mm;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
+                    <div style="font-size: 7.5px; margin-bottom: 0.8mm;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
                     
                     <!-- Observação (se houver) -->
                     ${cons.obs ? `<div style="font-size: 7.5px; margin-bottom: 0.5mm;"><strong>Obs:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
                     
                     <!-- LINHA DE SEPARAÇÃO -->
-                    <hr style="margin: 0.8mm 0; border: 0.5px solid #ccc;">
+                    <hr style="margin: 0.6mm 0; border: 0.5px solid #ccc;">
                     
                     <!-- TÍTULO DA ANAMNESE -->
                     <div style="font-size: 9px; font-weight: bold; margin: 0.3mm 0 0.3mm;">📋 Anamnese Oftalmológica</div>
                     
-                    <!-- ANAMNESE ESTRUTURADA -->
-                    <div style="font-size: 7.5px; line-height: 1.15;">
-                        <!-- Item 1 - Queixa Principal (largura total) com 3 linhas -->
-                        <div><strong>🩺 1. Queixa Principal (QP)</strong>${tresLinhas()}</div>
+                    <!-- ANAMNESE OFTALMOLÓGICA RESUMIDA -->
+                    <div style="font-size: 7.5px; line-height: 1.2;">
                         
-                        <!-- Item 2 (HDA) e Item 4 (Medicamentos) lado a lado -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 1mm;">
+                        <!-- Item 1: Queixa principal (com 3 linhas) -->
+                        <div>
+                            <strong>1. Queixa Principal</strong><br>
+                            Olho acometido: ( ) Direito ( ) Esquerdo ( ) Ambos |
+                            Início: ( ) Súbito ( ) Gradual |
+                            Tempo de evolução: __________
+                            ${tresLinhas()}
+                        </div>
+                        
+                        <!-- Item 2: Sintomas -->
+                        <div style="margin-top: 0.8mm;">
+                            <strong>2. Sintomas Apresentados</strong><br>
+                            ( ) Dor ocular — Intensidade: ____/10
+                            ( ) Olho vermelho
+                            ( ) Coceira
+                            ( ) Secreção<br>
+                            ( ) Visão embaçada
+                            ( ) Perda visual
+                            ( ) Fotofobia
+                            ( ) Lacrimejamento<br>
+                            ( ) Moscas volantes
+                            ( ) Flashes luminosos
+                            ( ) Sombra/cortina na visão
+                            ( ) Visão dupla<br>
+                            Outros: ______________________________________________________________
+                        </div>
+                        
+                        <!-- Item 3 e 4 lado a lado (Trauma + Lentes) -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 0.8mm;">
                             <div>
-                                <strong>📖 2. História da Doença Atual (HDA)</strong><br>
-                                Início: _____ Duração: _____ Intensidade: _____<br>
-                                Melhora/piora: _____ Sintomas associados: _____
-                                <div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}</div>
+                                <strong>3. Trauma ou Corpo Estranho</strong><br>
+                                ( ) Não ( ) Sim<br>
+                                Tipo/material: ___________________<br>
+                                Produto químico: ( ) Não ( ) Sim<br>
+                                Lavagem realizada: ( ) Não ( ) Sim
                             </div>
                             <div>
-                                <strong>💊 4. Uso de Medicamentos</strong> ( ) Não ( ) Sim → Quais: ${linhaSimples()}
+                                <strong>4. Lentes de Contato</strong><br>
+                                Utiliza: ( ) Não ( ) Sim<br>
+                                Dormiu com as lentes: ( ) Não ( ) Sim<br>
+                                Retirou a lente: ( ) Não ( ) Sim<br>
+                                Higienização adequada: ( ) Não ( ) Sim
                             </div>
                         </div>
                         
-                        <!-- Item 3 (Antecedentes) e Item 5 (Alergias) lado a lado -->
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 1mm;">
+                        <!-- Item 5: Antecedentes Oftalmológicos -->
+                        <div style="margin-top: 0.8mm;">
+                            <strong>5. Antecedentes Oftalmológicos</strong><br>
+                            ( ) Glaucoma
+                            ( ) Catarata
+                            ( ) Descolamento de retina
+                            ( ) Cirurgia ocular<br>
+                            ( ) Trauma anterior
+                            ( ) Uso de colírio
+                            ( ) Visão apenas em um olho
+                            ( ) Outros: __________<br>
+                            Cirurgia ou procedimento ocular recente: ( ) Não ( ) Sim — Qual/data: __________________
+                        </div>
+                        
+                        <!-- Item 6 e 7 lado a lado (Condições clínicas + Medicamentos/Alergias) -->
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm; margin-top: 0.8mm;">
                             <div>
-                                <strong>🧬 3. Antecedentes Pessoais</strong><br>
-                                ( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: _____<br>
-                                Cirurgias prévias: _____ Internações: _____
-                                <div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}</div>
+                                <strong>6. Condições Clínicas</strong><br>
+                                ( ) Diabetes
+                                ( ) Hipertensão
+                                ( ) Cardiopatia<br>
+                                ( ) Doença autoimune
+                                ( ) Imunossupressão<br>
+                                Outros: __________________________
                             </div>
                             <div>
-                                <strong>⚠️ 5. Alergias</strong> ( ) Não ( ) Sim → Quais: ${linhaSimples()}
+                                <strong>7. Medicamentos e Alergias</strong><br>
+                                Medicamentos: ____________________<br>
+                                Anticoagulante: ( ) Não ( ) Sim<br>
+                                Alergias: ( ) Não ( ) Sim<br>
+                                Quais: ___________________________
                             </div>
                         </div>
                         
-                        <!-- Item 6 - Antecedentes Familiares (largura total) com 3 linhas -->
-                        <div style="margin-top: 1mm;">
-                            <strong>👨‍👩‍👧 6. Antecedentes Familiares</strong>${tresLinhas()}
+                        <!-- Item 8: Sinais de Alerta (com borda) -->
+                        <div style="margin-top: 0.8mm; border: 1px solid #000; padding: 0.8mm;">
+                            <strong>8. Sinais de Alerta</strong><br>
+                            ( ) Perda súbita da visão
+                            ( ) Trauma perfurante
+                            ( ) Produto químico<br>
+                            ( ) Dor intensa com náusea/vômito
+                            ( ) Sombra ou cortina na visão<br>
+                            ( ) Pós-operatório ocular com dor ou perda visual
+                            ( ) Nenhum identificado
                         </div>
                         
-                        <!-- Item 7 - Hábitos de Vida (largura total) com 1 linha extra para observações -->
-                        <div style="margin-top: 1mm;">
-                            <strong>🍷 7. Hábitos de Vida</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim
-                            <div style="margin-top: 1px;">${linhaSimples()}</div>
+                        <!-- Item 9: Avaliação/Observações (com 3 linhas) -->
+                        <div style="margin-top: 0.8mm;">
+                            <strong>9. Avaliação / Observações</strong>
+                            ${tresLinhas()}
                         </div>
                         
-                        <!-- Item 8 - Observações Gerais (largura total) com 3 linhas -->
-                        <div style="margin-top: 1mm;">
-                            <strong>📋 8. Observações Gerais</strong>${tresLinhas()}
-                        </div>
-                        
-                        <!-- Item 9 - Conduta / Orientações (largura total) com 3 linhas -->
-                        <div style="margin-top: 1mm;">
-                            <strong>🧾 9. Conduta / Orientações</strong>${tresLinhas()}
+                        <!-- Item 10: Conduta (com 3 linhas) -->
+                        <div style="margin-top: 0.8mm;">
+                            <strong>10. Conduta / Orientações</strong>
+                            ${tresLinhas()}
                         </div>
                     </div>
                 </div>
