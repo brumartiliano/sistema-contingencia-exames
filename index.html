@@ -867,9 +867,9 @@
     function linhaSimples() {
         return '<div style="border-bottom: 1px solid #000; width: 100%; height: 13px; margin-top: 1px;"></div>';
     }
-    // Linhas para campos que precisam de mais espaço (itens 9, 10)
-    function tresLinhas() {
-        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
+    // Cinco linhas para os itens 1, 9 e 10
+    function cincoLinhas() {
+        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
     }
 
     return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
@@ -905,22 +905,19 @@
                     <!-- TÍTULO DA ANAMNESE -->
                     <div style="font-size: 9px; font-weight: bold; margin: 0.3mm 0 0.3mm;">📋 Anamnese Oftalmológica</div>
                     
-                    <!-- ANAMNESE COM FLEX PARA PREENCHER A PÁGINA -->
-                    <div style="display: flex; flex-direction: column; justify-content: space-between; gap: 0.8mm; font-size: 7.5px; line-height: 1.2;">
+                    <!-- ANAMNESE COM DISTRIBUIÇÃO UNIFORME -->
+                    <div style="display: flex; flex-direction: column; gap: 1.2mm; font-size: 7.5px; line-height: 1.2;">
                         
-                        <!-- Linha 1: Item 1 (Queixa Principal) e Item 2 (Sintomas) lado a lado? Não, melhor manter em coluna única com flex para distribuir.
-                        Vou colocar os itens 1 a 8 em uma coluna, e depois 9 e 10 com mais linhas. -->
-                        
-                        <!-- Item 1: Queixa principal (com 2 linhas) -->
+                        <!-- Item 1: Queixa principal (5 linhas) -->
                         <div>
                             <strong>1. Queixa Principal</strong><br>
                             Olho acometido: ( ) Direito ( ) Esquerdo ( ) Ambos |
                             Início: ( ) Súbito ( ) Gradual |
                             Tempo de evolução: __________
-                            <div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}</div>
+                            ${cincoLinhas()}
                         </div>
                         
-                        <!-- Item 2: Sintomas (em grid de 2 colunas para economizar espaço) -->
+                        <!-- Item 2: Sintomas -->
                         <div>
                             <strong>2. Sintomas Apresentados</strong><br>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
@@ -944,6 +941,9 @@
                             Outros: <span style="border-bottom: 1px solid #000; display: inline-block; width: 90%;">&nbsp;</span>
                         </div>
                         
+                        <!-- ESPAÇO ENTRE ITEM 2 E 3 (2mm) -->
+                        <div style="margin-top: 1mm;"></div>
+                        
                         <!-- Item 3 e 4 lado a lado (Trauma + Lentes) -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm;">
                             <div>
@@ -962,7 +962,10 @@
                             </div>
                         </div>
                         
-                        <!-- Item 5: Antecedentes Oftalmológicos (em grid de 2 colunas para otimizar) -->
+                        <!-- ESPAÇO ENTRE ITEM 4 E 5 (2mm) -->
+                        <div style="margin-top: 1mm;"></div>
+                        
+                        <!-- Item 5: Antecedentes Oftalmológicos (grid 2 colunas) -->
                         <div>
                             <strong>5. Antecedentes Oftalmológicos</strong><br>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
@@ -981,6 +984,9 @@
                             </div>
                             Cirurgia ou procedimento ocular recente: ( ) Não ( ) Sim — Qual/data: __________________
                         </div>
+                        
+                        <!-- ESPAÇO ENTRE ITEM 5 E 6 (2mm) -->
+                        <div style="margin-top: 1mm;"></div>
                         
                         <!-- Item 6 e 7 lado a lado (Condições + Medicamentos) -->
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4mm;">
@@ -1002,8 +1008,11 @@
                             </div>
                         </div>
                         
+                        <!-- ESPAÇO ENTRE ITEM 7 E 8 (2mm) -->
+                        <div style="margin-top: 1mm;"></div>
+                        
                         <!-- Item 8: Sinais de Alerta (com borda) -->
-                        <div style="border: 1px solid #000; padding: 0.5mm; margin-top: 0.5mm;">
+                        <div style="border: 1px solid #000; padding: 0.5mm;">
                             <strong>8. Sinais de Alerta</strong><br>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0 4px;">
                                 <div>
@@ -1020,16 +1029,16 @@
                             ( ) Nenhum identificado
                         </div>
                         
-                        <!-- Item 9: Avaliação/Observações (com 3 linhas) -->
+                        <!-- Item 9: Avaliação/Observações (5 linhas) -->
                         <div>
                             <strong>9. Avaliação / Observações</strong>
-                            ${tresLinhas()}
+                            ${cincoLinhas()}
                         </div>
                         
-                        <!-- Item 10: Conduta (com 3 linhas) -->
+                        <!-- Item 10: Conduta (5 linhas) -->
                         <div>
                             <strong>10. Conduta / Orientações</strong>
-                            ${tresLinhas()}
+                            ${cincoLinhas()}
                         </div>
                     </div>
                 </div>
