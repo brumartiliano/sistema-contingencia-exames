@@ -540,27 +540,26 @@
         return '';
     }
 
-    function montarRodape(unidade) {
-        const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 80);
-        const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 80);
-        const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 80);
-        const endereco = obterEnderecoUnidade(unidade);
-        const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
-        return `<div style="background: #f0f4f8; padding: 5mm; margin-top: 8mm; border-top: 1px solid #ccc; font-size: 10px; line-height: 1.2; width: 100%;">
-                    <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
-                    <div style="margin: 4px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304 | Site: www.preventsenior.com.br</div>
-                    <div><strong>RESULTADOS PELA INTERNET</strong></div>
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-                        <div style="flex:1;">Acesse pelo Portal do Beneficiário em nosso site ou via APP Prevent Senior. Tudo digital e muito prático para você! <strong>Acesse via QR CODE</strong><br>Médicos da rede própria Prevent Senior têm acesso aos resultados via prontuário eletrônico.</div>
-                        <div style="display: flex; gap: 10px; margin-left: 8px;">
-                            <div style="text-align:center;"><img src="${qrPortal}" width="60" height="60"><br><span style="font-size:8px;">Portal</span></div>
-                            <div style="text-align:center;"><img src="${qrApple}" width="60" height="60"><br><span style="font-size:8px;">Apple</span></div>
-                            <div style="text-align:center;"><img src="${qrPlay}" width="60" height="60"><br><span style="font-size:8px;">Play</span></div>
-                        </div>
+function montarRodape(unidade) {
+    const qrPortal = gerarQRCodeDataURL('https://beneficiario.preventsenior.com.br/portal-beneficiario/#bl', 60);
+    const qrApple = gerarQRCodeDataURL('https://apps.apple.com/cl/app/prevent-senior/id1460593382?l=en-GB', 60);
+    const qrPlay = gerarQRCodeDataURL('https://play.google.com/store/apps/details?id=br.com.preventsenior.aplicativo&hl=pt', 60);
+    const endereco = obterEnderecoUnidade(unidade);
+    const enderecoHtml = endereco ? `<br>${escapeHtml(endereco)}` : '';
+    return `<div style="background: #f0f4f8; padding: 3mm; margin-top: 4mm; border-top: 1px solid #ccc; font-size: 8px; line-height: 1.1; width: 100%;">
+                <div><strong>Local de realização:</strong> ${escapeHtml(unidade)}${enderecoHtml}</div>
+                <div style="margin: 2px 0;">Tel: (11) 3003-6284 | 0800 591 1156 | WhatsApp: (11) 4949-3304</div>
+                <div><strong>RESULTADOS PELA INTERNET</strong></div>
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div style="flex:1;">Acesse pelo Portal do Beneficiário ou APP. <strong>Acesse via QR CODE</strong></div>
+                    <div style="display: flex; gap: 6px; margin-left: 6px;">
+                        <div style="text-align:center;"><img src="${qrPortal}" width="40" height="40"><br><span style="font-size:6px;">Portal</span></div>
+                        <div style="text-align:center;"><img src="${qrApple}" width="40" height="40"><br><span style="font-size:6px;">Apple</span></div>
+                        <div style="text-align:center;"><img src="${qrPlay}" width="40" height="40"><br><span style="font-size:6px;">Play</span></div>
                     </div>
-                </div>`;
-    }
-
+                </div>
+            </div>`;
+}
     // ==================== FICHAS AGENDADAS ====================
     async function gerarFichaExamesAgendados(grupo) {
         const html = montarHTMLExameAgendado(grupo);
@@ -824,39 +823,42 @@
     }
 
     function montarHTMLProntoAtendimentoEncaixe(grupo) {
-        const dataFormat = grupo.data.split('-').reverse().join('/');
-        const cons = grupo.itens[0];
-        const linhaGrande = '<div style="margin-bottom: 6px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
-        function cincoLinhas() { return `<div style="margin-top: 4px;">${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
-        return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 8mm 10mm; box-sizing: border-box; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
-                    <div style="position: absolute; top: 5mm; right: 10mm; font-size: 9px; color: #333; background: #f0f0f0; padding: 2px 6px; border-radius: 4px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
-                    <div>
-                        <div style="background: #002b49; color: white; padding: 5mm; text-align: center; font-size: 14px; font-weight: bold; margin-bottom: 6mm;">FORMULÁRIO DE ATENDIMENTO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
+    const dataFormat = grupo.data.split('-').reverse().join('/');
+    const cons = grupo.itens[0];
+    const linhaGrande = '<div style="margin-bottom: 3px; border-bottom: 1px solid #000; width: 100%;">&nbsp;</div>';
+    function tresLinhas() { return `<div style="margin-top: 1px;">${linhaGrande}${linhaGrande}${linhaGrande}</div>`; }
+    return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 5mm 8mm 4mm 8mm; box-sizing: border-box; font-size: 9.5px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                <div style="position: absolute; top: 4mm; right: 8mm; font-size: 7px; color: #333; background: #f0f0f0; padding: 1px 5px; border-radius: 3px; font-weight: bold;">FOR.NMA.RCP.022.R0: Atendimento Manual - Queda de sistema</div>
+                <div>
+                    <div style="background: #002b49; color: white; padding: 3mm; text-align: center; font-size: 11px; font-weight: bold; margin-bottom: 4mm;">FORMULÁRIO DE ATENDIMENTO PRONTO ATENDIMENTO OFTALMO - ENCAIXE</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1px 8px; margin-bottom: 3mm; font-size: 9.5px;">
                         <div><strong>Beneficiário:</strong> ${escapeHtml(grupo.beneficiario)}</div>
                         <div><strong>Matrícula:</strong> ${escapeHtml(grupo.matricula)}</div>
-                        <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')} | <strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
+                        <div><strong>Nascimento:</strong> ${grupo.nascimento.split('-').reverse().join('/')}</div>
+                        <div><strong>Acompanhante:</strong> ${grupo.acompanhante}</div>
                         <div><strong>Data:</strong> ${dataFormat} às ${cons.hora}</div>
-                        <div><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Profissional:</strong> ${escapeHtml(cons.profissional)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
-                        <div><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
-                        ${cons.obs ? `<div><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
-                        <hr>
-                        <h3 style="font-size: 14px; font-weight: bold;">📋 Anamnese Oftalmológica</h3>
-                        <div>
-                            <div><strong>🩺 1. Queixa Principal (QP)</strong>${cincoLinhas()}</div>
-                            <div style="margin-top: 5mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div>
-                            <div style="margin-top: 5mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div>
-                            <div style="margin-top: 5mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
-                            <div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
-                            <div style="margin-top: 5mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${cincoLinhas()}</div>
-                            <div style="margin-top: 5mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div>
-                            <div style="margin-top: 5mm;"><strong>📋 8. Observações Gerais:</strong>${cincoLinhas()}</div>
-                            <div style="margin-top: 5mm;"><strong>🧾 9. Conduta / Orientações:</strong>${cincoLinhas()}</div>
-                        </div>
+                        <div><strong>Profissional:</strong> ${escapeHtml(cons.profissional)}</div>
                     </div>
-                    ${montarRodape(cons.local)}
-                </div>`;
-    }
-
+                    <div style="font-size: 9.5px;"><strong>Local:</strong> ${escapeHtml(cons.local)} | <strong>Especialidade:</strong> ${escapeHtml(cons.especialidade)}</div>
+                    <div style="font-size: 9.5px;"><strong>Procedimento:</strong> ${escapeHtml(cons.procedimento)}</div>
+                    ${cons.obs ? `<div style="font-size: 9.5px;"><strong>Observação:</strong> ${escapeHtml(cons.obs)}</div>` : ''}
+                    <hr style="margin: 2mm 0;">
+                    <h3 style="font-size: 10.5px; font-weight: bold; margin: 1mm 0 0.5mm;">📋 Anamnese Oftalmológica</h3>
+                    <div style="font-size: 9px; line-height: 1.2;">
+                        <div><strong>🩺 1. Queixa Principal (QP)</strong>${tresLinhas()}</div>
+                        <div style="margin-top: 2mm;"><strong>📖 2. História da Doença Atual (HDA)</strong><br>Início: ___________ Duração: ___________ Intensidade: ___________<br>Fatores de melhora/piora: ___________ Sintomas associados: ___________</div>
+                        <div style="margin-top: 2mm;"><strong>🧬 3. Antecedentes Pessoais:</strong><br>( ) Diabetes ( ) Hipertensão ( ) Cardiopatias ( ) Outros: ___________<br>Cirurgias prévias: ___________ Internações: ___________</div>
+                        <div style="margin-top: 2mm;"><strong>💊 4. Uso de Medicamentos:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                        <div><strong>⚠️ 5. Alergias:</strong> ( ) Não ( ) Sim → Quais: ___________</div>
+                        <div style="margin-top: 2mm;"><strong>👨‍👩‍👧 6. Antecedentes Familiares:</strong>${tresLinhas()}</div>
+                        <div style="margin-top: 2mm;"><strong>🍷 7. Hábitos de Vida:</strong> Tabagismo ( ) Não ( ) Sim | Álcool ( ) Não ( ) Sim | Atividade física ( ) Não ( ) Sim</div>
+                        <div style="margin-top: 2mm;"><strong>📋 8. Observações Gerais:</strong>${tresLinhas()}</div>
+                        <div style="margin-top: 2mm;"><strong>🧾 9. Conduta / Orientações:</strong>${tresLinhas()}</div>
+                    </div>
+                </div>
+                ${montarRodape(cons.local)}
+            </div>`;
+}
     // ==================== ETIQUETA ====================
     function montarEtiqueta(grupo) {
         const nasc = grupo.nascimento ? grupo.nascimento.split('-').reverse().join('/') : '___________';
