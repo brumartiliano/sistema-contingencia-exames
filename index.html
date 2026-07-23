@@ -867,9 +867,13 @@
     function linhaSimples() {
         return '<div style="border-bottom: 1px solid #000; width: 100%; height: 13px; margin-top: 1px;"></div>';
     }
-    // Cinco linhas para os itens 1, 9 e 10
-    function cincoLinhas() {
-        return `<div style="margin-top: 1px;">${linhaSimples()}${linhaSimples()}${linhaSimples()}${linhaSimples()}${linhaSimples()}</div>`;
+    // Dez linhas para os itens 1, 9 e 10
+    function dezLinhas() {
+        let linhas = '';
+        for (let i = 0; i < 10; i++) {
+            linhas += linhaSimples();
+        }
+        return `<div style="margin-top: 1px;">${linhas}</div>`;
     }
 
     return `<div style="font-family: 'Segoe UI', Arial, sans-serif; width: 210mm; min-height: 297mm; margin: 0 auto; background: white; padding: 3mm 6mm 2mm 6mm; box-sizing: border-box; font-size: 8px; display: flex; flex-direction: column; justify-content: space-between; position: relative;">
@@ -908,13 +912,13 @@
                     <!-- ANAMNESE COM DISTRIBUIÇÃO UNIFORME -->
                     <div style="display: flex; flex-direction: column; gap: 1.2mm; font-size: 7.5px; line-height: 1.2;">
                         
-                        <!-- Item 1: Queixa principal (5 linhas) -->
+                        <!-- Item 1: Queixa principal (10 linhas) -->
                         <div>
                             <strong>1. Queixa Principal</strong><br>
                             Olho acometido: ( ) Direito ( ) Esquerdo ( ) Ambos |
                             Início: ( ) Súbito ( ) Gradual |
                             Tempo de evolução: __________
-                            ${cincoLinhas()}
+                            ${dezLinhas()}
                         </div>
                         
                         <!-- Item 2: Sintomas -->
@@ -1029,16 +1033,16 @@
                             ( ) Nenhum identificado
                         </div>
                         
-                        <!-- Item 9: Avaliação/Observações (5 linhas) -->
+                        <!-- Item 9: Avaliação/Observações (10 linhas) -->
                         <div>
                             <strong>9. Avaliação / Observações</strong>
-                            ${cincoLinhas()}
+                            ${dezLinhas()}
                         </div>
                         
-                        <!-- Item 10: Conduta (5 linhas) -->
+                        <!-- Item 10: Conduta (10 linhas) -->
                         <div>
                             <strong>10. Conduta / Orientações</strong>
-                            ${cincoLinhas()}
+                            ${dezLinhas()}
                         </div>
                     </div>
                 </div>
